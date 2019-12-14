@@ -104,7 +104,7 @@ pub fn blend_color(red: GLfloat, green: GLfloat, blue: GLfloat, alpha: GLfloat) 
     unsafe { BlendColor(red, green, blue, alpha) }
 }
 
-pub fn blend_qquation(mode: GLenum) {
+pub fn blend_equation(mode: GLenum) {
     unsafe { BlendEquation(mode) }
 }
 
