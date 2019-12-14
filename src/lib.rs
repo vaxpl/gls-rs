@@ -637,7 +637,7 @@ pub fn shader_source<S: AsRef<str>>(shader: GLuint, source: S) {
     let src = CString::new(source.as_ref()).unwrap();
     let string = src.as_ptr();
     unsafe {
-        ShaderSource(shader, 1, &string as *const * const GLchar, std::ptr::null());
+        ShaderSource(shader, 1, &string as *const *const GLchar, std::ptr::null());
     }
 }
 
@@ -1065,22 +1065,17 @@ pub fn vertex_attrib_pointer(
     type_: GLenum,
     normalized: GLboolean,
     stride: GLsizei,
-    pointer: Option<&[u8]>,
+    pointer: GLsizeiptr,
 ) {
-    match pointer {
-        Some(p) => unsafe {
-            VertexAttribPointer(
-                index,
-                size,
-                type_,
-                normalized,
-                stride,
-                p.as_ptr() as *const std::os::raw::c_void,
-            );
-        },
-        None => unsafe {
-            VertexAttribPointer(index, size, type_, normalized, stride, std::ptr::null());
-        },
+    unsafe {
+        VertexAttribPointer(
+            index,
+            size,
+            type_,
+            normalized,
+            stride,
+            pointer as *const std::os::raw::c_void,
+        );
     }
 }
 
