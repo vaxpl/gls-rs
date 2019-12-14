@@ -375,7 +375,7 @@ pub fn get_active_attrib(program: GLuint, index: GLuint) -> Result<(String, GLen
             &mut length,
             &mut size,
             &mut type_,
-            name.as_mut_ptr(),
+            name.as_mut_ptr() as *mut GLchar,
         )
     }
     match length {
@@ -408,7 +408,7 @@ pub fn get_active_uniform(
             &mut length,
             &mut size,
             &mut type_,
-            name.as_mut_ptr(),
+            name.as_mut_ptr() as *mut GLchar,
         )
     }
     match length {
@@ -498,7 +498,7 @@ pub fn get_program_info_log(program: GLuint) -> Result<String, Error> {
             program,
             info.len() as GLsizei,
             &mut length,
-            info.as_mut_ptr(),
+            info.as_mut_ptr() as *mut GLchar,
         );
     }
     match length {
@@ -527,7 +527,7 @@ pub fn get_shader_info_log(shader: GLuint) -> Result<String, Error> {
             shader,
             info.len() as GLsizei,
             &mut length,
-            info.as_mut_ptr(),
+            info.as_mut_ptr() as *mut GLchar,
         );
     }
     match length {
@@ -548,7 +548,7 @@ pub fn get_shader_source(shader: GLuint) -> Result<String, Error> {
             shader,
             source.len() as GLsizei,
             &mut length,
-            source.as_mut_ptr(),
+            source.as_mut_ptr() as *mut GLchar,
         );
     }
     match length {
@@ -570,7 +570,7 @@ pub fn get_shaderiv(shader: GLuint, pname: GLenum) -> GLint {
 }
 
 pub fn get_string(name: GLenum) -> Result<String, Error> {
-    let s: *const GLchar = unsafe { GetString(name) };
+    let s: *const GLchar = unsafe { GetString(name) as *const GLchar };
     match s.is_null() {
         true => Err(Error::new()),
         false => unsafe { Ok(CStr::from_ptr(s).to_string_lossy().into_owned()) },
@@ -578,7 +578,7 @@ pub fn get_string(name: GLenum) -> Result<String, Error> {
 }
 
 pub fn get_stringi(name: GLenum, index: GLuint) -> Result<String, Error> {
-    let s: *const GLchar = unsafe { GetStringi(name, index) };
+    let s: *const GLchar = unsafe { GetStringi(name, index) as *const GLchar };
     match s.is_null() {
         true => Err(Error::new()),
         false => unsafe { Ok(CStr::from_ptr(s).to_string_lossy().into_owned()) },
