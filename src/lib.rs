@@ -54,8 +54,14 @@ pub fn attach_shader(program: GLuint, shader: GLuint) {
 /// * `program` - Specifies the handle of the program object in which the association is to be made.
 /// * `index` - Specifies the index of the generic vertex attribute to be bound.
 /// * `name` - Specifies a null terminated string containing the name of the vertex shader attribute variable to which index is to be bound.
-pub fn bind_attrib_location(program: GLuint, index: GLuint, name: &str) {
-    unsafe { BindAttribLocation(program, index, CString::new(name).unwrap().as_ptr()) }
+pub fn bind_attrib_location<S: AsRef<str>>(program: GLuint, index: GLuint, name: S) {
+    unsafe {
+        BindAttribLocation(
+            program,
+            index,
+            CString::new(name.as_ref()).unwrap().as_ptr(),
+        )
+    }
 }
 
 /// Bind a named buffer object.
@@ -593,8 +599,8 @@ pub fn get_tex_parameteriv(target: GLenum, pname: GLenum, params: &mut [GLint]) 
     unsafe { GetTexParameteriv(target, pname, params.as_mut_ptr()) }
 }
 
-pub fn get_uniform_location(program: GLuint, name: &str) -> Result<GLint, Error> {
-    let name = CString::new(name).unwrap();
+pub fn get_uniform_location<S: AsRef<str>>(program: GLuint, name: S) -> Result<GLint, Error> {
+    let name = CString::new(name.as_ref()).unwrap();
     match unsafe { GetUniformLocation(program, name.as_ptr()) } {
         -1 => Err(Error::new()),
         other => Ok(other),
