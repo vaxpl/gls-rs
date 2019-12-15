@@ -177,12 +177,12 @@ pub fn buffer_data(target: GLenum, size: GLsizeiptr, data: Option<&[u8]>, usage:
     }
 }
 
-pub fn buffer_sub_data(target: GLenum, offset: GLintptr, size: GLsizeiptr, data: &[u8]) {
+pub fn buffer_sub_data(target: GLenum, offset: GLintptr, data: &[u8]) {
     unsafe {
         BufferSubData(
             target,
             offset,
-            size,
+            data.len() as GLsizeiptr,
             data.as_ptr() as *const std::os::raw::c_void,
         )
     }
