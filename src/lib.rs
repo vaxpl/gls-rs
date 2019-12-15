@@ -94,7 +94,7 @@ pub fn bind_render_buffer(target: GLenum, renderbuffer: GLuint) {
     unsafe { BindRenderbuffer(target, renderbuffer) }
 }
 
-pub fn bind_texture(target: types::GLenum, texture: types::GLuint) {
+pub fn bind_texture(target: GLenum, texture: GLuint) {
     unsafe { BindTexture(target, texture) }
 }
 
@@ -177,12 +177,7 @@ pub fn buffer_data(target: GLenum, size: GLsizeiptr, data: Option<&[u8]>, usage:
     }
 }
 
-pub fn buffer_sub_data(
-    target: types::GLenum,
-    offset: types::GLintptr,
-    size: types::GLsizeiptr,
-    data: &[u8],
-) {
+pub fn buffer_sub_data(target: GLenum, offset: GLintptr, size: GLsizeiptr, data: &[u8]) {
     unsafe {
         BufferSubData(
             target,
@@ -193,7 +188,7 @@ pub fn buffer_sub_data(
     }
 }
 
-pub fn check_framebuffer_status(target: GLenum) -> types::GLenum {
+pub fn check_framebuffer_status(target: GLenum) -> GLenum {
     unsafe { CheckFramebufferStatus(target) }
 }
 
@@ -251,7 +246,6 @@ pub fn cull_face(mode: GLenum) {
 }
 
 pub fn delete_buffers(buffers: &[GLuint]) {
-    // n: types::GLsizei, buffers: *const types::GLuint
     unsafe { DeleteBuffers(buffers.len() as GLsizei, buffers.as_ptr()) }
 }
 
@@ -398,7 +392,7 @@ pub fn get_active_attrib(program: GLuint, index: GLuint) -> Result<(String, GLen
 }
 
 pub fn get_active_uniform(
-    program: types::GLuint,
+    program: GLuint,
     index: GLuint,
 ) -> Result<(String, GLenum, GLint), Error> {
     let mut name: [u8; 256] = [0; 256];
@@ -652,7 +646,7 @@ pub fn tex_image2d(
     level: GLint,
     internalformat: GLint,
     width: GLsizei,
-    height: types::GLsizei,
+    height: GLsizei,
     border: GLint,
     format: GLenum,
     type_: GLenum,
@@ -762,7 +756,7 @@ pub fn tex_sub_image2d(
     level: GLint,
     xoffset: GLint,
     yoffset: GLint,
-    width: types::GLsizei,
+    width: GLsizei,
     height: GLsizei,
     format: GLenum,
     type_: GLenum,
@@ -1023,7 +1017,7 @@ pub fn vertex_attrib1f(index: GLuint, x: GLfloat) {
     }
 }
 
-pub fn vertex_attrib1fv(index: types::GLuint, va: &[GLfloat]) {
+pub fn vertex_attrib1fv(index: GLuint, va: &[GLfloat]) {
     unsafe {
         VertexAttrib1fv(index, va.as_ptr());
     }
