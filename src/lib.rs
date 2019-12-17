@@ -297,18 +297,8 @@ pub fn draw_buffers(bufs: &[GLenum]) {
     unsafe { DrawBuffers(bufs.len() as GLsizei, bufs.as_ptr()) }
 }
 
-pub fn draw_elements(mode: GLenum, count: GLsizei, type_: GLenum, indices: Option<&[u8]>) {
-    match indices {
-        Some(v) => unsafe {
-            DrawElements(
-                mode,
-                count,
-                type_,
-                v.as_ptr() as *const std::os::raw::c_void,
-            )
-        },
-        None => unsafe { DrawElements(mode, count, type_, std::ptr::null()) },
-    }
+pub fn draw_elements(mode: GLenum, count: GLsizei, type_: GLenum, indices: GLsizeiptr) {
+    unsafe { DrawElements(mode, count, type_, indices as *const std::os::raw::c_void) }
 }
 
 pub fn enable(cap: GLenum) {
