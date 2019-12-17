@@ -631,6 +631,10 @@ pub fn shader_source<S: AsRef<str>>(shader: GLuint, source: S) {
     }
 }
 
+pub fn scissor(x: GLint, y: GLint, width: GLsizei, height: GLsizei) {
+    unsafe { Scissor(x, y, width, height) }
+}
+
 pub fn tex_image2d(
     target: GLenum,
     level: GLint,
