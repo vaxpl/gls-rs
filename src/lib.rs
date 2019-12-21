@@ -481,7 +481,7 @@ pub fn get_program_binary(program: GLuint) -> Result<(GLenum, Vec<u8>), Error> {
 
 pub fn get_program_info_log(program: GLuint) -> Result<String, Error> {
     let buf_size = get_programiv(program, INFO_LOG_LENGTH);
-    let mut info: Vec<u8> = vec![0; (buf_size + 2) as usize];
+    let mut info: Vec<u8> = vec![0; buf_size as usize];
     let mut length: GLsizei = 0;
     unsafe {
         GetProgramInfoLog(
