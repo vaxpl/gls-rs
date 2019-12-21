@@ -18,6 +18,12 @@ libc = "~0.2"
 [build-dependencies]
 gl_generator = "0.14.0"
 
+[target.'cfg(windows)'.dev-dependencies]
+sdl2 = { version = "0.32.2", features = ["bundled", "static-link"] }
+
+[target.'cfg(unix)'.dev-dependencies]
+sdl2 = { version = "0.32.2", features = [] }
+
 [features]
 default = [ "gles3" ]
 gl2 = []
