@@ -1,6 +1,6 @@
 [package]
 name = "glplus"
-version = "0.14.0"
+version = "0.1.0"
 authors = ["Varphone Wong <varphone@qq.com>"]
 keywords = ["graphics"]
 description = "Open Graphics Library (OpenGL) for Rust bindings"
