@@ -510,7 +510,7 @@ pub fn get_programiv(program: GLuint, pname: GLenum) -> GLint {
 
 pub fn get_shader_info_log(shader: GLuint) -> Result<String, Error> {
     let buf_size = get_shaderiv(shader, INFO_LOG_LENGTH);
-    let mut info: Vec<u8> = vec![0; (buf_size + 2) as usize];
+    let mut info: Vec<u8> = vec![0; buf_size as usize];
     let mut length: GLsizei = 0;
     unsafe {
         GetShaderInfoLog(
