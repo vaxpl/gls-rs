@@ -1082,4 +1082,12 @@ pub fn viewport(x: GLint, y: GLint, width: GLsizei, height: GLsizei) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use super::so::SharedObject;
+
+    #[test]
+    fn test_load_with() {
+        let so = SharedObject::load("libGLESv2.so");
+        load_with(|s| so.get_proc_address(s));
+        assert_eq!(get_error(), NO_ERROR);
+    }
 }
