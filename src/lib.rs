@@ -335,6 +335,12 @@ pub fn front_face(mode: GLenum) {
     unsafe { FrontFace(mode) }
 }
 
+pub fn new_buffer() -> GLuint {
+    let mut buffers: [GLuint; 1] = [0];
+    gen_buffers(&mut buffers);
+    buffers[0]
+}
+
 pub fn gen_buffers(buffers: &mut [GLuint]) {
     unsafe { GenBuffers(buffers.len() as GLsizei, buffers.as_mut_ptr()) }
 }
@@ -345,6 +351,12 @@ pub fn gen_framebuffers(framebuffers: &mut [GLuint]) {
 
 pub fn gen_textures(textures: &mut [GLuint]) {
     unsafe { GenTextures(textures.len() as GLsizei, textures.as_mut_ptr()) }
+}
+
+pub fn new_vetex_array() -> GLuint {
+    let mut arrays: [GLuint; 1] = [0];
+    gen_vertex_arrays(&mut arrays);
+    arrays[0]
 }
 
 pub fn gen_vertex_arrays(arrays: &mut [GLuint]) {
