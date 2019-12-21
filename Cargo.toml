@@ -1,13 +1,13 @@
 [package]
-name = "gl"
+name = "glplus"
 version = "0.14.0"
 authors = ["Varphone Wong <varphone@qq.com>"]
 keywords = ["graphics"]
 description = "Open Graphics Library (OpenGL) for Rust bindings"
 license = "MIT OR Apache-2.0"
 readme = "README.md"
-repository = "https://github.com/varphone/gl-rs.git"
-homepage = "https://github.com/varphone/gl-rs"
+repository = "https://github.com/varphone/glplus-rs.git"
+homepage = "https://github.com/varphone/glplus-rs"
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
