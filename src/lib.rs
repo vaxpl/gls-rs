@@ -359,7 +359,7 @@ pub fn gen_textures(textures: &mut [GLuint]) {
     unsafe { GenTextures(textures.len() as GLsizei, textures.as_mut_ptr()) }
 }
 
-pub fn new_vetex_array() -> GLuint {
+pub fn new_vertex_array() -> GLuint {
     let mut arrays: [GLuint; 1] = [0];
     gen_vertex_arrays(&mut arrays);
     arrays[0]
