@@ -1,3 +1,4 @@
+use nalgebra as na;
 use std::convert::TryInto;
 use std::ffi::{CStr, CString};
 use std::string::String;
@@ -10,11 +11,41 @@ pub mod ffi;
 pub mod error;
 pub use error::Error;
 
+pub mod auto_binder;
+pub use auto_binder::*;
+
+pub mod buffer;
+pub use buffer::*;
+
+pub mod clip_rect;
+pub use clip_rect::*;
+
+pub mod color_buffer;
+pub use color_buffer::*;
+
+pub mod shader;
+pub use shader::*;
+
 /// The shared library helper.
 pub mod so;
 
 /// Re-Export all in the ffi as top level.
 pub use ffi::*;
+
+pub type Matrix4 = na::Matrix4<GLfloat>;
+pub type Vector2 = na::Vector2<GLfloat>;
+pub type Vector3 = na::Vector3<GLfloat>;
+pub type Vector4 = na::Vector4<GLfloat>;
+
+/// Set object state in current context.
+pub trait Bindable {
+    /// Bind to current context.
+    fn bind(&self) {}
+    /// Bind to current context with slot.
+    fn bind_at(&self, _slot: u32) {}
+    /// Release from current context.
+    fn unbind(&self) {}
+}
 
 /// Set the active program object for a program pipeline object.
 ///
@@ -1107,8 +1138,8 @@ pub fn viewport(x: GLint, y: GLint, width: GLsizei, height: GLsizei) {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use super::so::SharedObject;
+    use super::*;
 
     #[test]
     fn test_load_with() {
