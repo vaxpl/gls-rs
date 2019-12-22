@@ -161,12 +161,15 @@ pub fn blend_funci(buf: GLuint, src: GLenum, dst: GLenum) {
 /// * `size` - Specifies the size in bytes of the buffer object's new data store.
 /// * `data` - Specifies a pointer to data that will be copied into the data store for initialization, or NULL if no data is to be copied.
 /// * `usage` - Specifies the expected usage pattern of the data store. The symbolic constant must be GL_STREAM_DRAW, GL_STREAM_READ, GL_STREAM_COPY, GL_STATIC_DRAW, GL_STATIC_READ, GL_STATIC_COPY, GL_DYNAMIC_DRAW, GL_DYNAMIC_READ, or GL_DYNAMIC_COPY.
-pub fn buffer_data(target: GLenum, size: GLsizeiptr, data: Option<&[u8]>, usage: GLenum) {
+pub fn buffer_data<T>(target: GLenum, size: GLsizeiptr, data: Option<&[T]>, usage: GLenum)
+where
+    T: Sized,
+{
     match data {
         Some(v) => unsafe {
             BufferData(
                 target,
-                size,
+                (v.len() * std::mem::size_of::<T>()) as GLsizeiptr,
                 v.as_ptr() as *const std::os::raw::c_void,
                 usage,
             );
@@ -177,12 +180,15 @@ pub fn buffer_data(target: GLenum, size: GLsizeiptr, data: Option<&[u8]>, usage:
     }
 }
 
-pub fn buffer_sub_data(target: GLenum, offset: GLintptr, data: &[u8]) {
+pub fn buffer_sub_data<T>(target: GLenum, offset: GLintptr, data: &[T])
+where
+    T: Sized,
+{
     unsafe {
         BufferSubData(
             target,
             offset,
-            data.len() as GLsizeiptr,
+            (data.len() * std::mem::size_of::<T>()) as GLsizeiptr,
             data.as_ptr() as *const std::os::raw::c_void,
         )
     }
@@ -647,7 +653,7 @@ pub fn scissor(x: GLint, y: GLint, width: GLsizei, height: GLsizei) {
     unsafe { Scissor(x, y, width, height) }
 }
 
-pub fn tex_image2d(
+pub fn tex_image2d<T>(
     target: GLenum,
     level: GLint,
     internalformat: GLint,
@@ -656,8 +662,10 @@ pub fn tex_image2d(
     border: GLint,
     format: GLenum,
     type_: GLenum,
-    pixels: Option<&[u8]>,
-) {
+    pixels: Option<&[T]>,
+) where
+    T: Sized,
+{
     match pixels {
         Some(v) => unsafe {
             TexImage2D(
@@ -688,7 +696,7 @@ pub fn tex_image2d(
     }
 }
 
-pub fn tex_image3d(
+pub fn tex_image3d<T>(
     target: GLenum,
     level: GLint,
     internalformat: GLint,
@@ -698,8 +706,10 @@ pub fn tex_image3d(
     border: GLint,
     format: GLenum,
     type_: GLenum,
-    pixels: Option<&[u8]>,
-) {
+    pixels: Option<&[T]>,
+) where
+    T: Sized,
+{
     match pixels {
         Some(v) => unsafe {
             TexImage3D(
@@ -757,7 +767,7 @@ pub fn tex_parameteriv(target: GLenum, pname: GLenum, params: &[GLint]) {
 }
 
 /// Specify a two-dimensional texture subimage.
-pub fn tex_sub_image2d(
+pub fn tex_sub_image2d<T>(
     target: GLenum,
     level: GLint,
     xoffset: GLint,
@@ -766,8 +776,10 @@ pub fn tex_sub_image2d(
     height: GLsizei,
     format: GLenum,
     type_: GLenum,
-    pixels: &[u8],
-) {
+    pixels: &[T],
+) where
+    T: Sized,
+{
     unsafe {
         TexSubImage2D(
             target,
@@ -783,7 +795,7 @@ pub fn tex_sub_image2d(
     }
 }
 
-pub fn tex_sub_image3d(
+pub fn tex_sub_image3d<T>(
     target: GLenum,
     level: GLint,
     xoffset: GLint,
@@ -794,8 +806,10 @@ pub fn tex_sub_image3d(
     depth: GLsizei,
     format: GLenum,
     type_: GLenum,
-    pixels: &[u8],
-) {
+    pixels: &[T],
+) where
+    T: Sized,
+{
     unsafe {
         TexSubImage3D(
             target,
