@@ -1,11 +1,23 @@
-﻿use libc;
+#[cfg(windows)]
+use winapi::{
+    shared::minwindef::HMODULE,
+    um::libloaderapi::{FreeLibrary, GetProcAddress, LoadLibraryA},
+};
+
+#[cfg(unix)]
+use libc::{dlclose, dlopen, dlsym};
+use std::ffi::CString;
+use std::os::raw::c_void;
 
 /// Shared library helper for Unix platforms.
 ///
 /// **Note**: The loaded library will auto unload when the object dropped.
 #[derive(Clone, Debug)]
 pub struct SharedObject {
-    handle: *mut std::os::raw::c_void,
+    #[cfg(windows)]
+    handle: HMODULE,
+    #[cfg(unix)]
+    handle: *mut c_void,
 }
 
 impl SharedObject {
@@ -14,10 +26,24 @@ impl SharedObject {
     /// # Parameters
     ///
     /// * `file_name` - Which library to load into current process.
-    pub fn load(file_name: &'static str) -> Self {
-        let file_name = std::ffi::CString::new(file_name).expect("libEGL.so");
+    #[cfg(windows)]
+    pub fn load<T>(path: T) -> Self
+    where
+        T: AsRef<str>,
+    {
+        let cstr = CString::new(path.as_ref()).expect("opengl32.dll");
         Self {
-            handle: unsafe { libc::dlopen(file_name.as_ptr(), 2) },
+            handle: unsafe { LoadLibraryA(cstr.as_ptr()) },
+        }
+    }
+    #[cfg(unix)]
+    pub fn load<T>(path: T) -> Self
+    where
+        T: AsRef<str>,
+    {
+        let cstr = CString::new(path.as_ref()).expect("libEGL.so");
+        Self {
+            handle: unsafe { dlopen(cstr.as_ptr(), 2) },
         }
     }
 
@@ -25,10 +51,20 @@ impl SharedObject {
     ///
     /// # Parameters
     ///
-    /// * `proc_name` - Which procedure to find.
-    pub fn get_proc_address(&self, proc_name: &'static str) -> *const std::os::raw::c_void {
-        let proc_name = std::ffi::CString::new(proc_name).unwrap();
-        unsafe { libc::dlsym(self.handle, proc_name.as_ptr()) }
+    /// * `name` - Which procedure to find.
+    pub fn get_proc_address<T>(&self, name: T) -> *const c_void
+    where
+        T: AsRef<str>,
+    {
+        let cstr = CString::new(name.as_ref()).unwrap();
+        #[cfg(windows)]
+        unsafe {
+            GetProcAddress(self.handle, cstr.as_ptr()) as *const c_void
+        }
+        #[cfg(unix)]
+        unsafe {
+            dlsym(self.handle, cstr.as_ptr())
+        }
     }
 }
 
@@ -36,7 +72,10 @@ impl Drop for SharedObject {
     fn drop(&mut self) {
         if self.handle != std::ptr::null_mut() {
             unsafe {
-                libc::dlclose(self.handle);
+                #[cfg(windows)]
+                FreeLibrary(self.handle);
+                #[cfg(unix)]
+                dlclose(self.handle);
             }
             self.handle = std::ptr::null_mut();
         }
