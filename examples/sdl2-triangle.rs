@@ -1,8 +1,7 @@
-use gl::{
+use gls::{
     uniform, AutoBinder, Bindable, Buffer, ClipRect, ColorBuffer, GLint, GLsizei, GLsizeiptr,
     GLuint, Matrix4, Program, Shader, Vector4, VertexArray, VertexAttrib,
 };
-use glplus as gl;
 use sdl2;
 
 fn main() {
@@ -20,7 +19,7 @@ fn main() {
     // create OpenGL context
     let _gl_context = window.gl_create_context().unwrap();
     // load OpenGL routines
-    gl::load_with(|s| video_subsystem.gl_get_proc_address(s) as *const std::ffi::c_void);
+    gls::load_with(|s| video_subsystem.gl_get_proc_address(s) as *const std::ffi::c_void);
 
     // set clip rect (viewport)
     let (w, h) = window.size();
@@ -62,8 +61,8 @@ fn main() {
     let a_position = VertexAttrib::new(
         position_aloc as GLuint,
         3,
-        gl::FLOAT,
-        gl::FALSE,
+        gls::FLOAT,
+        gls::FALSE,
         (6 * std::mem::size_of::<f32>()) as GLint,
         0,
     );
@@ -71,8 +70,8 @@ fn main() {
     let a_color = VertexAttrib::new(
         color_aloc as GLuint,
         3,
-        gl::FLOAT,
-        gl::FALSE,
+        gls::FLOAT,
+        gls::FALSE,
         (6 * std::mem::size_of::<f32>()) as GLint,
         (3 * std::mem::size_of::<f32>()) as GLsizeiptr,
     );
@@ -94,10 +93,10 @@ fn main() {
 
         let _a = AutoBinder::new(vec![&clip_rect, &color_buffer, &prog, &vao]);
 
-        gl::draw_arrays(
-            gl::TRIANGLES, // mode
-            0,             // starting index in the enabled arrays
-            3,             // number of indices to be rendered
+        gls::draw_arrays(
+            gls::TRIANGLES, // mode
+            0,              // starting index in the enabled arrays
+            3,              // number of indices to be rendered
         );
 
         window.gl_swap_window();

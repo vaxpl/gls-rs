@@ -1,19 +1,18 @@
 [package]
-name = "glplus"
+name = "gls"
 version = "0.1.0"
 authors = ["Varphone Wong <varphone@qq.com>"]
 keywords = ["graphics"]
-description = "Open Graphics Library (OpenGL) for Rust bindings"
+description = "Open Graphics Library (OpenGL) for Rust bindings with *Safe*, *Simple*, *Speed* and *Stupid*"
 license = "MIT OR Apache-2.0"
 readme = "README.md"
-repository = "https://github.com/varphone/glplus-rs.git"
-homepage = "https://github.com/varphone/glplus-rs"
+repository = "https://github.com/varphone/gls-rs.git"
+homepage = "https://github.com/varphone/gls-rs"
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-libc = "~0.2"
 nalgebra = "0.19.0"
 
 [build-dependencies]

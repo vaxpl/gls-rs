@@ -1,4 +1,4 @@
-use glplus as gl;
+use gls;
 use sdl2;
 
 fn main() {
@@ -13,9 +13,9 @@ fn main() {
     // Create OpenGL context
     let _gl_context = window.gl_create_context().unwrap();
     // Load OpenGL routines
-    gl::load_with(|s| video_subsystem.gl_get_proc_address(s) as *const std::ffi::c_void);
+    gls::load_with(|s| video_subsystem.gl_get_proc_address(s) as *const std::ffi::c_void);
     // Set screen clear color
-    gl::clear_color(0.3, 0.3, 0.5, 1.0);
+    gls::clear_color(0.3, 0.3, 0.5, 1.0);
 
     let mut event_pump = sdl.event_pump().unwrap();
     'main: loop {
@@ -25,7 +25,7 @@ fn main() {
                 _ => {}
             }
         }
-        gl::clear(gl::COLOR_BUFFER_BIT);
+        gls::clear(gls::COLOR_BUFFER_BIT);
         window.gl_swap_window();
     }
 }
