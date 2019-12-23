@@ -1,4 +1,4 @@
-use crate::Bindable;
+use crate::prelude::Bindable;
 use std::vec::Vec;
 
 pub struct AutoBinder<'a> {

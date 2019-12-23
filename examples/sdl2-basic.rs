@@ -25,7 +25,7 @@ fn main() {
                 _ => {}
             }
         }
-        gls::clear(gls::COLOR_BUFFER_BIT);
+        gls::clear(gls::raw::COLOR_BUFFER_BIT);
         window.gl_swap_window();
     }
 }

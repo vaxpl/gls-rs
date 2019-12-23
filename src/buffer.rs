@@ -1,4 +1,4 @@
-use crate::{Bindable, GLboolean, GLenum, GLint, GLsizei, GLsizeiptr, GLuint, GLvoid};
+use crate::{prelude::*, raw, GLboolean, GLenum, GLint, GLsizei, GLsizeiptr, GLuint};
 
 #[derive(Clone, Default, Debug)]
 pub struct Buffer {
@@ -8,15 +8,15 @@ pub struct Buffer {
 
 impl Buffer {
     pub fn new_array() -> Buffer {
-        Self::new(crate::ARRAY_BUFFER)
+        Self::new(raw::ARRAY_BUFFER)
     }
 
     pub fn new_element_array() -> Buffer {
-        Self::new(crate::ELEMENT_ARRAY_BUFFER)
+        Self::new(raw::ELEMENT_ARRAY_BUFFER)
     }
 
     pub fn new_draw_indirect() -> Buffer {
-        Self::new(crate::DRAW_INDIRECT_BUFFER)
+        Self::new(raw::DRAW_INDIRECT_BUFFER)
     }
 
     pub fn new(buffer_type: GLuint) -> Buffer {
@@ -31,10 +31,10 @@ impl Buffer {
         T: Sized,
     {
         crate::buffer_data(
-            self.buffer_type,   // target
-            -1,                 // size of data in bytes
-            Some(data),         // pointer to data
-            crate::STATIC_DRAW, // usage
+            self.buffer_type, // target
+            -1,               // size of data in bytes
+            Some(data),       // pointer to data
+            raw::STATIC_DRAW, // usage
         );
     }
 
@@ -43,10 +43,10 @@ impl Buffer {
         T: Sized,
     {
         crate::buffer_data(
-            self.buffer_type,   // target
-            -1,                 // size of data in bytes
-            Some(data),         // pointer to data
-            crate::STREAM_DRAW, // usage
+            self.buffer_type, // target
+            -1,               // size of data in bytes
+            Some(data),       // pointer to data
+            raw::STREAM_DRAW, // usage
         );
     }
 
@@ -58,7 +58,7 @@ impl Buffer {
             self.buffer_type,                                // target
             (size * std::mem::size_of::<T>()) as GLsizeiptr, // size of data in bytes
             None,                                            // pointer to data
-            crate::STREAM_DRAW,                              // usage
+            raw::STREAM_DRAW,                                // usage
         );
     }
 
@@ -72,10 +72,10 @@ impl Buffer {
         T: Sized,
     {
         let ptr = crate::map_buffer_range(
-            self.buffer_type,                                       // target
-            (offset * std::mem::size_of::<T>()) as GLsizeiptr,      // offset
-            (size * std::mem::size_of::<T>()) as GLsizeiptr,        //  length
-            crate::MAP_WRITE_BIT | crate::MAP_INVALIDATE_RANGE_BIT, // usage
+            self.buffer_type,                                   // target
+            (offset * std::mem::size_of::<T>()) as GLsizeiptr,  // offset
+            (size * std::mem::size_of::<T>()) as GLsizeiptr,    //  length
+            raw::MAP_WRITE_BIT | raw::MAP_INVALIDATE_RANGE_BIT, // usage
         );
         if ptr == ::std::ptr::null_mut() {
             return None;

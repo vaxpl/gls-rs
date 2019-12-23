@@ -1,6 +1,6 @@
 use gls::{
-    uniform, AutoBinder, Bindable, Buffer, ClipRect, ColorBuffer, GLint, GLsizei, GLsizeiptr,
-    GLuint, Matrix4, Program, Shader, Vector4, VertexArray, VertexAttrib,
+    prelude::*, uniform, AutoBinder, Buffer, ColorBuffer, GLint, GLsizei, GLsizeiptr, GLuint,
+    Matrix4, Program, Shader, Vector4, VertexArray, VertexAttrib, Viewport,
 };
 use sdl2;
 
@@ -21,9 +21,9 @@ fn main() {
     // load OpenGL routines
     gls::load_with(|s| video_subsystem.gl_get_proc_address(s) as *const std::ffi::c_void);
 
-    // set clip rect (viewport)
+    // set cviewport
     let (w, h) = window.size();
-    let clip_rect = ClipRect::with_size(w as i32, h as i32);
+    let viewport = Viewport::with_size(w as i32, h as i32);
     // set screen clear color
     let color_buffer = ColorBuffer::new();
     color_buffer.set_clear_color(Vector4::new(0.3, 0.3, 0.5, 1.0));
@@ -61,8 +61,8 @@ fn main() {
     let a_position = VertexAttrib::new(
         position_aloc as GLuint,
         3,
-        gls::FLOAT,
-        gls::FALSE,
+        gls::raw::FLOAT,
+        gls::raw::FALSE,
         (6 * std::mem::size_of::<f32>()) as GLint,
         0,
     );
@@ -70,8 +70,8 @@ fn main() {
     let a_color = VertexAttrib::new(
         color_aloc as GLuint,
         3,
-        gls::FLOAT,
-        gls::FALSE,
+        gls::raw::FLOAT,
+        gls::raw::FALSE,
         (6 * std::mem::size_of::<f32>()) as GLint,
         (3 * std::mem::size_of::<f32>()) as GLsizeiptr,
     );
@@ -91,12 +91,12 @@ fn main() {
             }
         }
 
-        let _a = AutoBinder::new(vec![&clip_rect, &color_buffer, &prog, &vao]);
+        let _a = AutoBinder::new(vec![&viewport, &color_buffer, &prog, &vao]);
 
         gls::draw_arrays(
-            gls::TRIANGLES, // mode
-            0,              // starting index in the enabled arrays
-            3,              // number of indices to be rendered
+            gls::raw::TRIANGLES, // mode
+            0,                   // starting index in the enabled arrays
+            3,                   // number of indices to be rendered
         );
 
         window.gl_swap_window();

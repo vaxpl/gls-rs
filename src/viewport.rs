@@ -1,14 +1,14 @@
-use crate::Bindable;
+use crate::prelude::Bindable;
 
 #[derive(Clone, Copy, Default, Debug)]
-pub struct ClipRect {
+pub struct Viewport {
     pub x: i32,
     pub y: i32,
     pub w: i32,
     pub h: i32,
 }
 
-impl ClipRect {
+impl Viewport {
     pub fn with_offset(x: i32, y: i32, w: i32, h: i32) -> Self {
         Self { x, y, w, h }
     }
@@ -35,7 +35,7 @@ impl ClipRect {
     }
 }
 
-impl Bindable for ClipRect {
+impl Bindable for Viewport {
     fn bind(&self) {
         if (self.w * self.h) > 0 {
             crate::viewport(self.x, self.y, self.w, self.h);

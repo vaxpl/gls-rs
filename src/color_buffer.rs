@@ -1,4 +1,4 @@
-use crate::{Bindable, Vector4};
+use crate::{prelude::*, raw, Vector4};
 use std::cell::Cell;
 use std::option::Option;
 
@@ -18,8 +18,6 @@ impl ColorBuffer {
         if let Some(v) = self.clear_color.get() {
             if v != color {
                 self.clear_color.set(Some(color));
-                //self.clear_color.set(Some(color));
-                //crate::clear_color(color.x, color.y, color.z, color.w);
             }
         } else {
             self.clear_color.set(Some(color));
@@ -27,19 +25,19 @@ impl ColorBuffer {
     }
 
     pub fn set_default_blend_func(&self) {
-        crate::blend_func(crate::SRC_ALPHA, crate::ONE_MINUS_SRC_ALPHA);
+        crate::blend_func(raw::SRC_ALPHA, raw::ONE_MINUS_SRC_ALPHA);
     }
 
     pub fn clear(&self) {
-        crate::clear(crate::COLOR_BUFFER_BIT);
+        crate::clear(raw::COLOR_BUFFER_BIT);
     }
 
     pub fn enable_blend(&self) {
-        crate::enable(crate::BLEND);
+        crate::enable(raw::BLEND);
     }
 
     pub fn disable_blend(&self) {
-        crate::disable(crate::BLEND);
+        crate::disable(raw::BLEND);
     }
 }
 
@@ -47,7 +45,7 @@ impl Bindable for ColorBuffer {
     fn bind(&self) {
         if let Some(color) = self.clear_color.get() {
             crate::clear_color(color.x, color.y, color.z, color.w);
-            crate::clear(crate::COLOR_BUFFER_BIT);
+            crate::clear(raw::COLOR_BUFFER_BIT);
         }
     }
     fn unbind(&self) {}
