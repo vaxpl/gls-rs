@@ -347,6 +347,12 @@ pub fn gen_framebuffers(framebuffers: &mut [GLuint]) {
     unsafe { raw::GenFramebuffers(framebuffers.len() as GLsizei, framebuffers.as_mut_ptr()) }
 }
 
+pub fn new_texture() -> GLuint {
+    let mut textures: [GLuint; 1] = [0];
+    gen_textures(&mut textures);
+    textures[0]
+}
+
 pub fn gen_textures(textures: &mut [GLuint]) {
     unsafe { raw::GenTextures(textures.len() as GLsizei, textures.as_mut_ptr()) }
 }
@@ -359,6 +365,10 @@ pub fn new_vertex_array() -> GLuint {
 
 pub fn gen_vertex_arrays(arrays: &mut [GLuint]) {
     unsafe { raw::GenVertexArrays(arrays.len() as GLsizei, arrays.as_mut_ptr()) }
+}
+
+pub fn generate_mipmap(target: GLenum) {
+    unsafe { raw::GenerateMipmap(target) }
 }
 
 pub fn get_active_attrib(program: GLuint, index: GLuint) -> Result<(String, GLenum, GLint), Error> {
