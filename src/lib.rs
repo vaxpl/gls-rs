@@ -31,6 +31,9 @@ pub use shader::*;
 /// The shared library helper.
 pub mod so;
 
+pub mod texture;
+pub use texture::*;
+
 pub mod viewport;
 pub use viewport::*;
 
