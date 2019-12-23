@@ -6,7 +6,7 @@ pub mod prelude;
 pub mod raw;
 pub use raw::{
     load_with, GLbitfield, GLboolean, GLchar, GLenum, GLfloat, GLint, GLintptr, GLsizei,
-    GLsizeiptr, GLuint, GLvoid,
+    GLsizeiptr, GLubyte, GLuint, GLvoid,
 };
 
 pub mod apis;
