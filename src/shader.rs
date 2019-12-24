@@ -78,6 +78,17 @@ impl Program {
         }
     }
 
+    pub fn from_sources<T>(sources: &[(T, GLenum)]) -> Result<Program, String>
+    where
+        T: AsRef<str> + std::fmt::Debug,
+    {
+        let shaders: Vec<_> = sources
+            .iter()
+            .map(|(s, k)| Shader::from_source(s, *k).unwrap())
+            .collect();
+        Program::from_shaders(&shaders[0..])
+    }
+
     pub fn id(&self) -> GLuint {
         self.id
     }
