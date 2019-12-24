@@ -37,7 +37,11 @@ pub use texture::*;
 pub mod viewport;
 pub use viewport::*;
 
+pub type Isometry3 = na::Isometry3<GLfloat>;
+pub type Orthographic3 = na::Orthographic3<GLfloat>;
+pub type Perspective3 = na::Perspective3<GLfloat>;
 pub type Matrix4 = na::Matrix4<GLfloat>;
+pub type Transform3 = na::Transform3<GLfloat>;
 pub type Vector2 = na::Vector2<GLfloat>;
 pub type Vector3 = na::Vector3<GLfloat>;
 pub type Vector4 = na::Vector4<GLfloat>;
