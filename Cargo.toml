@@ -1,0 +1,47 @@
+[package]
+name = "gls"
+version = "0.1.0"
+authors = ["Varphone Wong <varphone@qq.com>"]
+keywords = ["graphics"]
+description = "Open Graphics Library (OpenGL) for Rust bindings with *Safe*, *Simple*, *Speed* and *Stupid*"
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/varphone/gls-rs.git"
+homepage = "https://github.com/varphone/gls-rs"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+nalgebra = "0.19.0"
+
+[build-dependencies]
+gl_generator = "0.14.0"
+
+[target.'cfg(windows)'.dev-dependencies]
+sdl2 = { version = "0.32.2", features = ["bundled", "static-link"] }
+
+[target.'cfg(windows)'.dependencies]
+winapi = { version = "0.3.8", features = [ "libloaderapi" ] }
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[target.'cfg(unix)'.dev-dependencies]
+sdl2 = { version = "0.32.2", features = [] }
+
+[features]
+default = [ "gles3" ]
+gl2 = []
+gl3 = []
+gl4 = []
+gles1 = []
+gles2 = []
+gles3 = []
+hi3516ev200 = []
+hi3516ev300 = []
+hi3518ev200 = []
+hi3518ev300 = []
+hi3519av100 = []
+hi3531v100 = []
+hi3559av100 = []
