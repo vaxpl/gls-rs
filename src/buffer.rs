@@ -178,6 +178,23 @@ impl VertexAttrib {
     }
 }
 
+impl Bindable for VertexAttrib {
+    fn bind(&self) {
+        crate::enable_vertex_attrib_array(self.location);
+        crate::vertex_attrib_pointer(
+            self.location,
+            self.components,
+            self.data_type,
+            self.normalized,
+            self.stride,
+            self.offset,
+        );
+    }
+    fn unbind(&self) {
+        crate::disable_vertex_attrib_array(self.location);
+    }
+}
+
 #[derive(Clone, Default, Debug)]
 pub struct VertexArray {
     vao: GLuint,
