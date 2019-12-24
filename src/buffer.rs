@@ -20,9 +20,11 @@ impl Buffer {
     }
 
     pub fn new(buffer_type: GLuint) -> Buffer {
+        let vbo = crate::new_buffer();
+        crate::bind_buffer(buffer_type, vbo);
         Buffer {
             buffer_type,
-            vbo: crate::new_buffer(),
+            vbo: vbo,
         }
     }
 
