@@ -86,6 +86,28 @@ impl Buffer {
             position: 0,
         });
     }
+
+    pub fn update<T>(&self, data: &[T])
+    where
+        T: Sized,
+    {
+        crate::buffer_sub_data(
+            self.buffer_type, // target
+            0,                // offset into the buffer
+            data,             // pointer to data
+        );
+    }
+
+    pub fn update_partial<T>(&self, offset: isize, data: &[T])
+    where
+        T: Sized,
+    {
+        crate::buffer_sub_data(
+            self.buffer_type, // target
+            offset,           // offset into the buffer
+            data,             // pointer to data
+        );
+    }
 }
 
 impl Drop for Buffer {
