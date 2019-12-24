@@ -212,6 +212,16 @@ impl<'a> TextureLoader<'a> {
         self
     }
 
+    pub fn with_internal_format(mut self, internal_format: TextureFormat) -> Self {
+        self.options.internal_format = internal_format;
+        self
+    }
+
+    pub fn with_format(mut self, format: TextureFormat) -> Self {
+        self.options.format = format;
+        self
+    }
+
     pub fn with_texel(mut self, texel: TextureTexel) -> Self {
         self.options.texel = texel;
         self
