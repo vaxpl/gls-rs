@@ -363,6 +363,14 @@ impl Texture {
 
         Ok(())
     }
+
+    pub fn id(&self) -> GLuint {
+        self.id
+    }
+
+    pub fn target(&self) -> TextureTarget {
+        self.target
+    }
 }
 
 impl Bindable for Texture {
