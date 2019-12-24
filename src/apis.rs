@@ -47,13 +47,8 @@ pub fn attach_shader(program: GLuint, shader: GLuint) {
 /// * `index` - Specifies the index of the generic vertex attribute to be bound.
 /// * `name` - Specifies a null terminated string containing the name of the vertex shader attribute variable to which index is to be bound.
 pub fn bind_attrib_location<S: AsRef<str>>(program: GLuint, index: GLuint, name: S) {
-    unsafe {
-        gl::BindAttribLocation(
-            program,
-            index,
-            CString::new(name.as_ref()).unwrap().as_ptr(),
-        )
-    }
+    let name = CString::new(name.as_ref()).unwrap();
+    unsafe { gl::BindAttribLocation(program, index, name.as_ptr()) }
 }
 
 /// Bind a named buffer object.
