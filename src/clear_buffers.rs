@@ -1,5 +1,4 @@
 use crate::{gl, prelude::*, GLbitfield, GLfloat, GLint, Vector4};
-use std::cell::Cell;
 use std::option::Option;
 
 #[derive(Clone, Copy, Default, Debug)]
