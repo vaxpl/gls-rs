@@ -1,5 +1,5 @@
 use gls::{
-    prelude::*, uniform, AutoBinder, Buffer, ColorBuffer, GLint, GLsizei, GLsizeiptr, GLuint,
+    prelude::*, uniform, AutoBinder, Buffer, ClearBuffers, GLint, GLsizei, GLsizeiptr, GLuint,
     Matrix4, Program, Shader, Texture, TextureLoader, Vector4, VertexArray, VertexAttrib, Viewport,
 };
 use sdl2;
@@ -11,7 +11,7 @@ fn main() {
     gl_attr.set_context_profile(sdl2::video::GLProfile::Core);
     gl_attr.set_context_version(4, 1);
     let window = video_subsystem
-        .window("GlPlus - Triangle", 800, 600)
+        .window("Gls - Texture", 800, 600)
         .opengl()
         .resizable()
         .build()
@@ -25,8 +25,7 @@ fn main() {
     let (w, h) = window.size();
     let viewport = Viewport::with_size(w as i32, h as i32);
     // set screen clear color
-    let color_buffer = ColorBuffer::new();
-    color_buffer.set_clear_color(Vector4::new(0.3, 0.3, 0.5, 1.0));
+    let clear_buffers = ClearBuffers::new().with_color(Some(Vector4::new(0.3, 0.3, 0.5, 1.0)));
 
     let fs = include_str!("shaders/textured.frag");
     let vs = include_str!("shaders/textured.vert");
@@ -100,7 +99,7 @@ fn main() {
             }
         }
 
-        let _a = AutoBinder::new(vec![&viewport, &color_buffer, &prog, &texture, &vao]);
+        let _a = AutoBinder::new(vec![&viewport, &clear_buffers, &prog, &texture, &vao]);
 
         gls::draw_arrays(
             gls::raw::TRIANGLES, // mode

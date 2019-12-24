@@ -22,8 +22,8 @@ pub use auto_binder::*;
 pub mod buffer;
 pub use buffer::*;
 
-pub mod color_buffer;
-pub use color_buffer::*;
+pub mod clear_buffers;
+pub use clear_buffers::*;
 
 pub mod shader;
 pub use shader::*;

@@ -5,7 +5,7 @@ fn main() {
     let sdl = sdl2::init().unwrap();
     let video_subsystem = sdl.video().unwrap();
     let window = video_subsystem
-        .window("GlPlus - Basic", 800, 600)
+        .window("Gls - Basic", 800, 600)
         .opengl()
         .resizable()
         .build()

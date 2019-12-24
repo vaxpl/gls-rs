@@ -202,6 +202,11 @@ pub fn clear_depthf(d: GLfloat) {
     unsafe { raw::ClearDepthf(d) }
 }
 
+#[cfg(feature = "gl4")]
+pub fn clear_index(index: GLfloat) {
+    unsafe { raw::ClearIndex(index) }
+}
+
 pub fn clear_stencil(s: GLint) {
     unsafe { raw::ClearStencil(s) }
 }
