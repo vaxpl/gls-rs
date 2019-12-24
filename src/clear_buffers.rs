@@ -1,4 +1,4 @@
-use crate::{prelude::*, raw as gl, GLbitfield, GLfloat, GLint, Vector4};
+use crate::{gl, prelude::*, GLbitfield, GLfloat, GLint, Vector4};
 use std::cell::Cell;
 use std::option::Option;
 

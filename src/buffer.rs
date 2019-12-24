@@ -1,4 +1,4 @@
-use crate::{prelude::*, raw, GLboolean, GLenum, GLint, GLsizei, GLsizeiptr, GLuint};
+use crate::{gl, prelude::*, GLboolean, GLenum, GLint, GLsizei, GLsizeiptr, GLuint};
 
 #[derive(Clone, Default, Debug)]
 pub struct Buffer {
@@ -8,15 +8,15 @@ pub struct Buffer {
 
 impl Buffer {
     pub fn new_array() -> Buffer {
-        Self::new(raw::ARRAY_BUFFER)
+        Self::new(gl::ARRAY_BUFFER)
     }
 
     pub fn new_element_array() -> Buffer {
-        Self::new(raw::ELEMENT_ARRAY_BUFFER)
+        Self::new(gl::ELEMENT_ARRAY_BUFFER)
     }
 
     pub fn new_draw_indirect() -> Buffer {
-        Self::new(raw::DRAW_INDIRECT_BUFFER)
+        Self::new(gl::DRAW_INDIRECT_BUFFER)
     }
 
     pub fn new(buffer_type: GLuint) -> Buffer {
@@ -34,7 +34,7 @@ impl Buffer {
             self.buffer_type, // target
             -1,               // size of data in bytes
             Some(data),       // pointer to data
-            raw::STATIC_DRAW, // usage
+            gl::STATIC_DRAW,  // usage
         );
     }
 
@@ -46,7 +46,7 @@ impl Buffer {
             self.buffer_type, // target
             -1,               // size of data in bytes
             Some(data),       // pointer to data
-            raw::STREAM_DRAW, // usage
+            gl::STREAM_DRAW,  // usage
         );
     }
 
@@ -58,7 +58,7 @@ impl Buffer {
             self.buffer_type,                                // target
             (size * std::mem::size_of::<T>()) as GLsizeiptr, // size of data in bytes
             None,                                            // pointer to data
-            raw::STREAM_DRAW,                                // usage
+            gl::STREAM_DRAW,                                 // usage
         );
     }
 
@@ -72,10 +72,10 @@ impl Buffer {
         T: Sized,
     {
         let ptr = crate::map_buffer_range(
-            self.buffer_type,                                   // target
-            (offset * std::mem::size_of::<T>()) as GLsizeiptr,  // offset
-            (size * std::mem::size_of::<T>()) as GLsizeiptr,    //  length
-            raw::MAP_WRITE_BIT | raw::MAP_INVALIDATE_RANGE_BIT, // usage
+            self.buffer_type,                                  // target
+            (offset * std::mem::size_of::<T>()) as GLsizeiptr, // offset
+            (size * std::mem::size_of::<T>()) as GLsizeiptr,   //  length
+            gl::MAP_WRITE_BIT | gl::MAP_INVALIDATE_RANGE_BIT,  // usage
         );
         if ptr == ::std::ptr::null_mut() {
             return None;

@@ -1,7 +1,7 @@
 use crate::{
+    gl,
+    gl::{GLenum, GLint, GLsizei, GLuint},
     prelude::*,
-    raw as gl,
-    raw::{GLenum, GLint, GLsizei, GLuint},
 };
 
 #[derive(Clone, Copy, Debug)]

@@ -3,8 +3,8 @@ use nalgebra as na;
 pub mod prelude;
 
 /// Foreign Function Interface of the OpenGL unsafe bindings.
-pub mod raw;
-pub use raw::{
+pub mod gl;
+pub use gl::{
     load_with, GLbitfield, GLboolean, GLchar, GLenum, GLfloat, GLint, GLintptr, GLsizei,
     GLsizeiptr, GLubyte, GLuint, GLvoid,
 };
@@ -37,7 +37,7 @@ pub use texture::*;
 pub mod viewport;
 pub use viewport::*;
 
-pub type Matrix4 = na::Matrix4<raw::GLfloat>;
-pub type Vector2 = na::Vector2<raw::GLfloat>;
-pub type Vector3 = na::Vector3<raw::GLfloat>;
-pub type Vector4 = na::Vector4<raw::GLfloat>;
+pub type Matrix4 = na::Matrix4<GLfloat>;
+pub type Vector2 = na::Vector2<GLfloat>;
+pub type Vector3 = na::Vector3<GLfloat>;
+pub type Vector4 = na::Vector4<GLfloat>;

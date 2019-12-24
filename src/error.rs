@@ -1,5 +1,5 @@
 use crate::{
-    raw::{
+    gl::{
         GetError, INVALID_ENUM, INVALID_FRAMEBUFFER_OPERATION, INVALID_OPERATION, INVALID_VALUE,
         NO_ERROR, OUT_OF_MEMORY,
     },

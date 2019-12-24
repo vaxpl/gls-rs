@@ -1,5 +1,5 @@
 use crate::{
-    prelude::*, raw, Error, GLenum, GLfloat, GLint, GLuint, Matrix4, Vector2, Vector3, Vector4,
+    gl, prelude::*, Error, GLenum, GLfloat, GLint, GLuint, Matrix4, Vector2, Vector3, Vector4,
 };
 use std::fs::File;
 use std::io::Read;
@@ -66,7 +66,7 @@ impl Program {
             crate::attach_shader(program_id, shader.id());
         }
         crate::link_program(program_id);
-        match crate::get_programiv(program_id, raw::LINK_STATUS) {
+        match crate::get_programiv(program_id, gl::LINK_STATUS) {
             0 => Err(crate::get_program_info_log(program_id).unwrap()),
             _ => {
                 for shader in shaders {
@@ -101,9 +101,7 @@ impl Program {
             UniformValue::Int(v) => crate::uniform1i(location, v),
             UniformValue::Float(v) => crate::uniform1f(location, v),
             UniformValue::Float3(v) => crate::uniform3f(location, v.x, v.y, v.z),
-            UniformValue::Matrix4(v) => {
-                crate::uniform_matrix4fv(location, raw::FALSE, v.as_slice())
-            }
+            UniformValue::Matrix4(v) => crate::uniform_matrix4fv(location, gl::FALSE, v.as_slice()),
             _ => unimplemented!(),
         }
     }
@@ -141,14 +139,14 @@ impl Shader {
             || path.ends_with("vs.glsl")
             || path.ends_with("vert.glsl")
         {
-            return Ok(raw::VERTEX_SHADER);
+            return Ok(gl::VERTEX_SHADER);
         }
         if path.ends_with(".fs")
             || path.ends_with(".frag")
             || path.ends_with("fs.glsl")
             || path.ends_with("frag.glsl")
         {
-            return Ok(raw::FRAGMENT_SHADER);
+            return Ok(gl::FRAGMENT_SHADER);
         }
         Err(format!("Unknown Shader Type: {}!", path))
     }
@@ -176,7 +174,7 @@ impl Shader {
         let id = crate::create_shader(kind).unwrap();
         crate::shader_source(id, source.as_ref());
         crate::compile_shader(id);
-        match crate::get_shaderiv(id, raw::COMPILE_STATUS) {
+        match crate::get_shaderiv(id, gl::COMPILE_STATUS) {
             0 => Err(crate::get_shader_info_log(id).unwrap()),
             _ => Ok(Shader { id }),
         }
@@ -186,14 +184,14 @@ impl Shader {
     where
         T: AsRef<str>,
     {
-        Shader::from_source(source, raw::VERTEX_SHADER)
+        Shader::from_source(source, gl::VERTEX_SHADER)
     }
 
     pub fn from_frag_source<T>(source: T) -> Result<Shader, String>
     where
         T: AsRef<str>,
     {
-        Shader::from_source(source, raw::FRAGMENT_SHADER)
+        Shader::from_source(source, gl::FRAGMENT_SHADER)
     }
 
     pub fn id(&self) -> GLuint {

@@ -1,5 +1,5 @@
 use gls::{
-    prelude::*, uniform, AutoBinder, Buffer, ClearBuffers, GLint, GLsizei, GLsizeiptr, GLuint,
+    gl, prelude::*, uniform, AutoBinder, Buffer, ClearBuffers, GLint, GLsizei, GLsizeiptr, GLuint,
     Matrix4, Program, Shader, Vector4, VertexArray, VertexAttrib, Viewport,
 };
 use sdl2;
@@ -60,8 +60,8 @@ fn main() {
     let a_position = VertexAttrib::new(
         position_aloc as GLuint,
         3,
-        gls::raw::FLOAT,
-        gls::raw::FALSE,
+        gl::FLOAT,
+        gl::FALSE,
         (6 * std::mem::size_of::<f32>()) as GLint,
         0,
     );
@@ -69,8 +69,8 @@ fn main() {
     let a_color = VertexAttrib::new(
         color_aloc as GLuint,
         3,
-        gls::raw::FLOAT,
-        gls::raw::FALSE,
+        gl::FLOAT,
+        gl::FALSE,
         (6 * std::mem::size_of::<f32>()) as GLint,
         (3 * std::mem::size_of::<f32>()) as GLsizeiptr,
     );
@@ -93,9 +93,9 @@ fn main() {
         let _a = AutoBinder::new(vec![&viewport, &clear_buffers, &prog, &vao]);
 
         gls::draw_arrays(
-            gls::raw::TRIANGLES, // mode
-            0,                   // starting index in the enabled arrays
-            3,                   // number of indices to be rendered
+            gl::TRIANGLES, // mode
+            0,             // starting index in the enabled arrays
+            3,             // number of indices to be rendered
         );
 
         window.gl_swap_window();
