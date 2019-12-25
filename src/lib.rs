@@ -8,6 +8,8 @@ pub use gl::{
     load_with, GLbitfield, GLboolean, GLchar, GLenum, GLfloat, GLint, GLintptr, GLsizei,
     GLsizeiptr, GLubyte, GLuint, GLvoid,
 };
+#[cfg(any(feature = "gles1", feature = "gles2", feature = "gles3"))]
+pub use gl::{GLeglImageOES};
 
 pub mod apis;
 pub use apis::*;

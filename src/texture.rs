@@ -3,6 +3,8 @@ use crate::{
     gl::{GLenum, GLint, GLsizei, GLuint},
     prelude::*,
 };
+#[cfg(any(feature = "gles1", feature = "gles2", feature = "gles3"))]
+use crate::{GLeglImageOES};
 
 #[derive(Clone, Copy, Debug)]
 pub enum TextureFilter {
@@ -46,6 +48,8 @@ pub enum TextureTarget {
     Texture2D = gl::TEXTURE_2D as isize,
     Texture2DArray = gl::TEXTURE_2D_ARRAY as isize,
     Texture3D = gl::TEXTURE_3D as isize,
+    #[cfg(any(feature = "gles1", feature = "gles2", feature = "gles3"))]
+    TextureExternalOES = gl::TEXTURE_EXTERNAL_OES as isize,
     #[cfg(feature = "gl4")]
     Texture3DArray = gl::TEXTURE_3D_ARRAY as isize,
     #[cfg(feature = "gl4")]
@@ -123,6 +127,8 @@ impl Default for TextureWrap {
 pub struct TextureLoadOptions<'a> {
     path: Option<&'a str>,
     bytes: Option<&'a [u8]>,
+    #[cfg(any(feature = "gles1", feature = "gles2", feature = "gles3"))]
+    egl_image: Option<GLeglImageOES>,
     target: TextureTarget,
     level: usize,
     internal_format: TextureFormat,
@@ -164,6 +170,8 @@ impl<'a> Default for TextureLoadOptions<'a> {
         Self {
             path: None,
             bytes: None,
+            #[cfg(any(feature = "gles1", feature = "gles2", feature = "gles3"))]
+            egl_image: None,
             target: TextureTarget::Texture2D,
             level: 0,
             internal_format: TextureFormat::Rgba,
@@ -193,6 +201,13 @@ impl<'a> TextureLoader<'a> {
 
     pub fn with_bytes(mut self, bytes: &'a [u8]) -> Self {
         self.options.bytes = Some(bytes);
+        self
+    }
+
+    #[cfg(any(feature = "gles1", feature = "gles2", feature = "gles3"))]
+    pub fn with_egl_image(mut self, egl_image: GLeglImageOES) -> Self {
+        self.options.egl_image = Some(egl_image);
+        self.options.target = TextureTarget::TextureExternalOES;
         self
     }
 
@@ -355,6 +370,13 @@ impl Texture {
             );
         }
 
+        #[cfg(any(feature = "gles1", feature = "gles2", feature = "gles3"))]
+        {
+            if let Some(egl_image) = options.egl_image {
+                crate::egl_image_target_texture_2d_oes(self.target as GLenum, egl_image);
+            }
+        }
+
         if options.gen_mipmaps {
             crate::generate_mipmap(self.target as GLenum);
         }
@@ -362,6 +384,13 @@ impl Texture {
         crate::bind_texture(self.target as GLenum, 0);
 
         Ok(())
+    }
+
+    #[cfg(any(feature = "gles1", feature = "gles2", feature = "gles3"))]
+    pub fn update_with_egl_image(&self, egl_image: GLeglImageOES) {
+        crate::bind_texture(self.target as GLenum, self.id);
+        crate::egl_image_target_texture_2d_oes(self.target as GLenum, egl_image);
+        crate::bind_texture(self.target as GLenum, 0);
     }
 
     pub fn id(&self) -> GLuint {

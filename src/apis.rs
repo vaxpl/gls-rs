@@ -2,6 +2,9 @@ use crate::{
     gl, Error, GLbitfield, GLboolean, GLchar, GLenum, GLfloat, GLint, GLintptr, GLsizei,
     GLsizeiptr, GLuint,
 };
+#[cfg(any(feature = "gles1", feature = "gles2", feature = "gles3"))]
+use crate::{GLeglImageOES};
+
 use std::convert::TryInto;
 use std::ffi::{CStr, CString};
 use std::os::raw::c_void;
@@ -297,6 +300,16 @@ pub fn draw_buffers(bufs: &[GLenum]) {
 
 pub fn draw_elements(mode: GLenum, count: GLsizei, type_: GLenum, indices: GLsizeiptr) {
     unsafe { gl::DrawElements(mode, count, type_, indices as *const c_void) }
+}
+
+#[cfg(any(feature = "gles1", feature = "gles2", feature = "gles3"))]
+pub fn egl_image_target_renderbuffer_storage_oes(target: GLenum, image: GLeglImageOES) {
+    unsafe { gl::EGLImageTargetRenderbufferStorageOES(target, image) }
+}
+
+#[cfg(any(feature = "gles1", feature = "gles2", feature = "gles3"))]
+pub fn egl_image_target_texture_2d_oes(target: GLenum, image: GLeglImageOES) {
+    unsafe { gl::EGLImageTargetTexture2DOES(target, image) }
 }
 
 pub fn enable(cap: GLenum) {
