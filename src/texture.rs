@@ -1,10 +1,11 @@
+#[cfg(any(feature = "gles1", feature = "gles2", feature = "gles3"))]
+use crate::GLeglImageOES;
 use crate::{
     gl,
     gl::{GLenum, GLint, GLsizei, GLuint},
     prelude::*,
+    Finalizer,
 };
-#[cfg(any(feature = "gles1", feature = "gles2", feature = "gles3"))]
-use crate::{GLeglImageOES};
 
 #[derive(Clone, Copy, Debug)]
 pub enum TextureFilter {
@@ -128,9 +129,9 @@ impl Default for TextureWrap {
 }
 
 #[derive(Clone, Copy, Debug)]
-pub struct TextureLoadOptions<'a> {
-    path: Option<&'a str>,
-    bytes: Option<&'a [u8]>,
+pub struct TextureLoadOptions<'b> {
+    path: Option<&'b str>,
+    bytes: Option<&'b [u8]>,
     #[cfg(any(feature = "gles1", feature = "gles2", feature = "gles3"))]
     egl_image: Option<GLeglImageOES>,
     target: TextureTarget,
@@ -147,8 +148,8 @@ pub struct TextureLoadOptions<'a> {
     gen_mipmaps: bool,
 }
 
-impl<'a> TextureLoadOptions<'a> {
-    pub fn from_bytes_rgb(bytes: &'a [u8], width: usize, height: usize) -> Self {
+impl<'b> TextureLoadOptions<'b> {
+    pub fn from_bytes_rgb(bytes: &'b [u8], width: usize, height: usize) -> Self {
         let mut options: TextureLoadOptions = Default::default();
         options.bytes = Some(bytes);
         options.internal_format = TextureFormat::Rgb8;
@@ -158,7 +159,7 @@ impl<'a> TextureLoadOptions<'a> {
         options
     }
 
-    pub fn from_bytes_rgba(bytes: &'a [u8], width: usize, height: usize) -> Self {
+    pub fn from_bytes_rgba(bytes: &'b [u8], width: usize, height: usize) -> Self {
         let mut options: TextureLoadOptions = Default::default();
         options.bytes = Some(bytes);
         options.internal_format = TextureFormat::Rgba;
@@ -169,7 +170,7 @@ impl<'a> TextureLoadOptions<'a> {
     }
 }
 
-impl<'a> Default for TextureLoadOptions<'a> {
+impl<'b> Default for TextureLoadOptions<'b> {
     fn default() -> Self {
         Self {
             path: None,
@@ -192,119 +193,126 @@ impl<'a> Default for TextureLoadOptions<'a> {
     }
 }
 
-pub struct TextureLoader<'a> {
-    options: TextureLoadOptions<'a>,
+pub struct TextureLoader<'b> {
+    options: TextureLoadOptions<'b>,
 }
 
-impl<'a> TextureLoader<'a> {
+impl<'b> TextureLoader<'b> {
     pub fn default() -> Self {
         Self {
             options: Default::default(),
         }
     }
 
-    pub fn with_bytes(mut self, bytes: &'a [u8]) -> Self {
+    pub fn with_bytes(&mut self, bytes: &'b [u8]) -> &mut Self {
         self.options.bytes = Some(bytes);
         self
     }
 
     #[cfg(any(feature = "gles1", feature = "gles2", feature = "gles3"))]
-    pub fn with_egl_image(mut self, egl_image: GLeglImageOES) -> Self {
+    pub fn with_egl_image(&mut self, egl_image: GLeglImageOES) -> &mut Self {
         self.options.egl_image = Some(egl_image);
         self.options.target = TextureTarget::TextureExternalOES;
         self
     }
 
-    pub fn with_2d(mut self) -> Self {
+    pub fn with_2d(&mut self) -> &mut Self {
         self.options.target = TextureTarget::Texture2D;
         self
     }
 
-    pub fn with_3d(mut self) -> Self {
+    pub fn with_3d(&mut self) -> &mut Self {
         self.options.target = TextureTarget::Texture3D;
         self
     }
 
-    pub fn with_size(mut self, width: usize, height: usize) -> Self {
+    pub fn with_size(&mut self, width: usize, height: usize) -> &mut Self {
         self.options.width = width;
         self.options.height = height;
         self
     }
 
-    pub fn with_internal_format(mut self, internal_format: TextureFormat) -> Self {
+    pub fn with_internal_format(&mut self, internal_format: TextureFormat) -> &mut Self {
         self.options.internal_format = internal_format;
         self
     }
 
-    pub fn with_format(mut self, format: TextureFormat) -> Self {
+    pub fn with_format(&mut self, format: TextureFormat) -> &mut Self {
         self.options.format = format;
         self
     }
 
-    pub fn with_texel(mut self, texel: TextureTexel) -> Self {
+    pub fn with_texel(&mut self, texel: TextureTexel) -> &mut Self {
         self.options.texel = texel;
         self
     }
 
-    pub fn with_min_nearest(mut self) -> Self {
+    pub fn with_min_nearest(&mut self) -> &mut Self {
         self.options.min_filter = TextureFilter::Nearest;
         self
     }
 
-    pub fn with_min_linear(mut self) -> Self {
+    pub fn with_min_linear(&mut self) -> &mut Self {
         self.options.min_filter = TextureFilter::Linear;
         self
     }
 
-    pub fn with_mag_nearest(mut self) -> Self {
+    pub fn with_mag_nearest(&mut self) -> &mut Self {
         self.options.mag_filter = TextureFilter::Nearest;
         self
     }
 
-    pub fn with_mag_linear(mut self) -> Self {
+    pub fn with_mag_linear(&mut self) -> &mut Self {
         self.options.mag_filter = TextureFilter::Linear;
         self
     }
 
-    pub fn with_nearest(mut self) -> Self {
+    pub fn with_nearest(&mut self) -> &mut Self {
         self.options.min_filter = TextureFilter::Nearest;
         self.options.mag_filter = TextureFilter::Nearest;
         self
     }
 
-    pub fn with_linear(mut self) -> Self {
+    pub fn with_linear(&mut self) -> &mut Self {
         self.options.min_filter = TextureFilter::Linear;
         self.options.mag_filter = TextureFilter::Linear;
         self
     }
 
-    pub fn with_gen_mipmaps(mut self) -> Self {
+    pub fn with_gen_mipmaps(&mut self) -> &mut Self {
         self.options.gen_mipmaps = true;
         self
     }
 
-    pub fn load(self) -> Result<Texture, String> {
-        Texture::load(self.options)
+    pub fn load<'a>(&self) -> Result<Texture<'a>, String> {
+        Texture::load(self.options, None)
     }
 }
 
-#[derive(Clone, Default, Debug)]
-pub struct Texture {
+type TextureFinalizer<'a> = crate::Finalizer<'a, Texture<'a>>;
+
+#[derive(Default)]
+pub struct Texture<'a> {
     id: GLuint,
     target: TextureTarget,
+    finalizer: Option<Finalizer<'a, Texture<'a>>>,
 }
 
-impl Drop for Texture {
+impl<'a> Drop for Texture<'a> {
     fn drop(&mut self) {
         crate::delete_textures(&[self.id]);
     }
 }
 
-impl Texture {
-    pub fn load<'a>(options: TextureLoadOptions<'a>) -> Result<Texture, String> {
+impl<'a> Texture<'a> {
+    pub fn load<'b>(
+        options: TextureLoadOptions<'b>,
+        finalizer: Option<TextureFinalizer<'a>>,
+    ) -> Result<Texture<'a>, String> {
         let texture = Texture {
             id: crate::new_texture(),
             target: options.target,
+            finalizer: finalizer,
         };
         texture.update(options)?;
         Ok(texture)
@@ -352,7 +360,7 @@ impl Texture {
         crate::tex_parameteri(self.target as GLenum, gl::TEXTURE_WRAP_T, wrap_t as GLint);
     }
 
-    pub fn update<'a>(&self, options: TextureLoadOptions<'a>) -> Result<(), String> {
+    pub fn update<'b>(&self, options: TextureLoadOptions<'b>) -> Result<(), String> {
         crate::bind_texture(self.target as GLenum, self.id);
 
         // https://www.khronos.org/opengl/wiki/Common_Mistakes
@@ -406,7 +414,7 @@ impl Texture {
     }
 }
 
-impl Bindable for Texture {
+impl<'a> Bindable for Texture<'a> {
     fn bind(&self) {
         crate::bind_texture(self.target as GLenum, self.id);
     }

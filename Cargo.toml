@@ -26,6 +26,7 @@ winapi = { version = "0.3.8", features = [ "libloaderapi" ] }
 
 [target.'cfg(unix)'.dependencies]
 libc = "0.2"
+egls = { version = "0.1", optional = true }
 
 [target.'cfg(unix)'.dev-dependencies]
 sdl2 = { version = "0.32.2", features = [] }
@@ -44,4 +45,4 @@ hi3518ev200 = []
 hi3518ev300 = []
 hi3519av100 = []
 hi3531v100 = []
-hi3559av100 = []
+hi3559av100 = [ "egls/hi3559av100" ]

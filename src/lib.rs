@@ -4,12 +4,12 @@ pub mod prelude;
 
 /// Foreign Function Interface of the OpenGL unsafe bindings.
 pub mod gl;
+#[cfg(any(feature = "gles1", feature = "gles2", feature = "gles3"))]
+pub use gl::GLeglImageOES;
 pub use gl::{
     load_with, GLbitfield, GLboolean, GLchar, GLenum, GLfloat, GLint, GLintptr, GLsizei,
     GLsizeiptr, GLubyte, GLuint, GLvoid,
 };
-#[cfg(any(feature = "gles1", feature = "gles2", feature = "gles3"))]
-pub use gl::{GLeglImageOES};
 
 pub mod apis;
 pub use apis::*;
@@ -38,6 +38,9 @@ pub use texture::*;
 
 pub mod viewport;
 pub use viewport::*;
+
+/// Callback before object prepare to drop.
+pub type Finalizer<'a, T> = Box<dyn Fn(&T) + 'a>;
 
 pub type Isometry3 = na::Isometry3<GLfloat>;
 pub type Orthographic3 = na::Orthographic3<GLfloat>;

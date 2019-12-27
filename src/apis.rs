@@ -1,9 +1,9 @@
+#[cfg(any(feature = "gles1", feature = "gles2", feature = "gles3"))]
+use crate::GLeglImageOES;
 use crate::{
     gl, Error, GLbitfield, GLboolean, GLchar, GLenum, GLfloat, GLint, GLintptr, GLsizei,
     GLsizeiptr, GLuint,
 };
-#[cfg(any(feature = "gles1", feature = "gles2", feature = "gles3"))]
-use crate::{GLeglImageOES};
 
 use std::convert::TryInto;
 use std::ffi::{CStr, CString};
