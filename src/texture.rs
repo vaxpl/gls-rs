@@ -60,8 +60,12 @@ pub enum TextureTarget {
     ProxyTexture3D = gl::PROXY_TEXTURE_3D as isize,
     #[cfg(feature = "gl4")]
     ProxyTexture3DArray = gl::PROXY_TEXTURE_3D_ARRAY as isize,
-    CubeMapPositiveX = gl::TEXTURE_CUBE_MAP_POSITIVE_X as isize,
-    CubeMapNegativeX = gl::TEXTURE_CUBE_MAP_NEGATIVE_X as isize,
+    TextureCubeMapPositiveX = gl::TEXTURE_CUBE_MAP_POSITIVE_X as isize,
+    TextureCubeMapNegativeX = gl::TEXTURE_CUBE_MAP_NEGATIVE_X as isize,
+    TextureCubeMapPositiveY = gl::TEXTURE_CUBE_MAP_POSITIVE_Y as isize,
+    TextureCubeMapNegativeY = gl::TEXTURE_CUBE_MAP_NEGATIVE_Y as isize,
+    TextureCubeMapPositiveZ = gl::TEXTURE_CUBE_MAP_POSITIVE_Z as isize,
+    TextureCubeMapNegativeZ = gl::TEXTURE_CUBE_MAP_NEGATIVE_Z as isize,
 }
 
 impl Default for TextureTarget {
