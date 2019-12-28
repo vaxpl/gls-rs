@@ -6,6 +6,7 @@ use crate::{
     prelude::*,
     Finalizer,
 };
+use std::cell::Cell;
 
 #[derive(Clone, Copy, Debug)]
 pub enum TextureFilter {
@@ -193,14 +194,16 @@ impl<'b> Default for TextureLoadOptions<'b> {
     }
 }
 
-pub struct TextureLoader<'b> {
+pub struct TextureLoader<'a, 'b> {
     options: TextureLoadOptions<'b>,
+    finalizer: Cell<Option<TextureFinalizer<'a>>>,
 }
 
-impl<'b> TextureLoader<'b> {
+impl<'a, 'b> TextureLoader<'a, 'b> {
     pub fn default() -> Self {
         Self {
             options: Default::default(),
+            finalizer: Cell::new(None),
         }
     }
 
@@ -284,8 +287,16 @@ impl<'b> TextureLoader<'b> {
         self
     }
 
-    pub fn load<'a>(&self) -> Result<Texture<'a>, String> {
-        Texture::load(self.options, None)
+    pub fn with_finalizer<F>(&mut self, finalizer: F) -> &mut Self
+    where
+        F: Fn(&Texture<'a>) + 'a,
+    {
+        self.finalizer.replace(Some(Box::new(finalizer)));
+        self
+    }
+
+    pub fn load(&self) -> Result<Texture<'a>, String> {
+        Texture::load(self.options, self.finalizer.replace(None))
     }
 }
 
