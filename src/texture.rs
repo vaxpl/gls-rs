@@ -289,18 +289,22 @@ impl<'b> TextureLoader<'b> {
     }
 }
 
-type TextureFinalizer<'a> = crate::Finalizer<'a, Texture<'a>>;
+type TextureFinalizer<'a> = Finalizer<'a, Texture<'a>>;
 
 #[derive(Default)]
 pub struct Texture<'a> {
     id: GLuint,
     target: TextureTarget,
-    finalizer: Option<Finalizer<'a, Texture<'a>>>,
+    finalizer: Option<TextureFinalizer<'a>>,
 }
 
 impl<'a> Drop for Texture<'a> {
     fn drop(&mut self) {
+        if let Some(ref f) = self.finalizer.take() {
+            (f)(self);
+        }
         crate::delete_textures(&[self.id]);
+        self.id = 0;
     }
 }
 
@@ -312,7 +316,7 @@ impl<'a> Texture<'a> {
         let texture = Texture {
             id: crate::new_texture(),
             target: options.target,
-            finalizer: finalizer,
+            finalizer,
         };
         texture.update(options)?;
         Ok(texture)

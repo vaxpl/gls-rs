@@ -3,6 +3,10 @@
 #![allow(non_snake_case)]
 #![allow(improper_ctypes)]
 #![allow(dead_code)]
+#![allow(clippy::missing_safety_doc)]
+#![allow(clippy::too_many_arguments)]
+#![allow(clippy::unreadable_literal)]
+#![allow(clippy::unused_unit)]
 
 include!(concat!(env!("OUT_DIR"), "/gl_bindings.rs"));
 

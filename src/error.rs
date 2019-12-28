@@ -8,7 +8,7 @@ use crate::{
 use std::convert::TryInto;
 
 /// Error Object for OpenGL.
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, Default, PartialEq, Eq)]
 pub struct Error(GLenum);
 
 impl Error {
@@ -20,17 +20,17 @@ impl Error {
     }
 
     /// Return true if error raised.
-    pub fn is_error(&self) -> bool {
+    pub fn is_error(self) -> bool {
         self.0 != NO_ERROR.try_into().unwrap()
     }
 
     /// Return true if no error.
-    pub fn is_okay(&self) -> bool {
+    pub fn is_okay(self) -> bool {
         self.0 == NO_ERROR.try_into().unwrap()
     }
 
     /// Return human reable text of the error code.
-    pub fn to_str(&self) -> &str {
+    pub fn to_str(self) -> &'static str {
         match self.0 as u32 {
             NO_ERROR => "No error",
             INVALID_ENUM => "An unacceptable value is specified for an enumerated argument",

@@ -1,3 +1,5 @@
+#![allow(clippy::too_many_arguments)]
+
 #[cfg(any(feature = "gles1", feature = "gles2", feature = "gles3"))]
 use crate::GLeglImageOES;
 use crate::{
@@ -229,7 +231,7 @@ pub fn create_shader(type_: GLenum) -> Result<GLuint, Error> {
 
 pub fn create_shader_programv<T: AsRef<str>>(
     type_: GLenum,
-    strings: &Vec<T>,
+    strings: &[T],
 ) -> Result<GLuint, Error> {
     let cv: Vec<CString> = strings
         .iter()
@@ -593,18 +595,24 @@ pub fn get_shaderiv(shader: GLuint, pname: GLenum) -> GLint {
 }
 
 pub fn get_string(name: GLenum) -> Result<String, Error> {
-    let s: *const GLchar = unsafe { gl::GetString(name) as *const GLchar };
-    match s.is_null() {
-        true => Err(Error::new()),
-        false => unsafe { Ok(CStr::from_ptr(s).to_string_lossy().into_owned()) },
+    unsafe {
+        let name: *const GLchar = gl::GetString(name) as *const GLchar;
+        if name.is_null() {
+            Err(Error::new())
+        } else {
+            Ok(CStr::from_ptr(name).to_string_lossy().into_owned())
+        }
     }
 }
 
 pub fn get_stringi(name: GLenum, index: GLuint) -> Result<String, Error> {
-    let s: *const GLchar = unsafe { gl::GetStringi(name, index) as *const GLchar };
-    match s.is_null() {
-        true => Err(Error::new()),
-        false => unsafe { Ok(CStr::from_ptr(s).to_string_lossy().into_owned()) },
+    unsafe {
+        let name: *const GLchar = gl::GetStringi(name, index) as *const GLchar;
+        if name.is_null() {
+            Err(Error::new())
+        } else {
+            Ok(CStr::from_ptr(name).to_string_lossy().into_owned())
+        }
     }
 }
 

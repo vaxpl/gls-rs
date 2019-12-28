@@ -1,6 +1,7 @@
 use crate::prelude::Bindable;
 use std::vec::Vec;
 
+#[derive(Clone, Default)]
 pub struct AutoBinder<'a> {
     list: Vec<&'a dyn Bindable>,
 }
@@ -10,7 +11,7 @@ impl<'a> AutoBinder<'a> {
         for a in list.iter() {
             a.bind();
         }
-        Self { list: list }
+        Self { list }
     }
 }
 

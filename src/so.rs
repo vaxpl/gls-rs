@@ -70,7 +70,7 @@ impl SharedObject {
 
 impl Drop for SharedObject {
     fn drop(&mut self) {
-        if self.handle != std::ptr::null_mut() {
+        if self.handle.is_null() {
             unsafe {
                 #[cfg(windows)]
                 FreeLibrary(self.handle);
