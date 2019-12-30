@@ -1,6 +1,6 @@
 [package]
 name = "gls"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Varphone Wong <varphone@qq.com>"]
 keywords = ["graphics"]
 description = "Open Graphics Library (OpenGL) for Rust bindings with *Safe*, *Simple*, *Speed* and *Stupid*"
