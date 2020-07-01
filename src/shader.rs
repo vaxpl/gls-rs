@@ -11,7 +11,7 @@ pub enum UniformValue<'a> {
     Int(GLint),
     UnsignedInt(GLuint),
     Float(GLfloat),
-    FLoat2(&'a Vector2),
+    Float2(&'a Vector2),
     Float3(&'a Vector3),
     Float4(&'a Vector4),
     FloatV(&'a [GLfloat]),
