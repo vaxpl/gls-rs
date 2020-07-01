@@ -120,7 +120,9 @@ impl Program {
         match value {
             UniformValue::Int(v) => crate::uniform1i(location, v),
             UniformValue::Float(v) => crate::uniform1f(location, v),
+            UniformValue::Float2(v) => crate::uniform2f(location, v.x, v.y),
             UniformValue::Float3(v) => crate::uniform3f(location, v.x, v.y, v.z),
+            UniformValue::Float4(v) => crate::uniform4f(location, v.x, v.y, v.z, v.w),
             UniformValue::Matrix4(v) => crate::uniform_matrix4fv(location, gl::FALSE, v.as_slice()),
             _ => unimplemented!(),
         }
