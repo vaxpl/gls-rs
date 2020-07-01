@@ -35,11 +35,20 @@ macro_rules! uniform {
     (vec2($v:expr)) => {
         $crate::UniformValue::Float2($v)
     };
+    (vec2($v0:expr,$v1:expr)) => {
+        $crate::UniformValue::Float2(&Vector2::new($v0, $v1))
+    };
     (vec3($v:expr)) => {
         $crate::UniformValue::Float3($v)
     };
+    (vec3($v0:expr,$v1:expr,$v2:expr)) => {
+        $crate::UniformValue::Float3(&Vector3::new($v0, $v1, $v2))
+    };
     (vec4($v:expr)) => {
         $crate::UniformValue::Float4($v)
+    };
+    (vec4($v0:expr,$v1:expr,$v2:expr,$v3:expr)) => {
+        $crate::UniformValue::Float4(&Vector4::new($v0, $v1, $v2, $v3))
     };
 }
 
