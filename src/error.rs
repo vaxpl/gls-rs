@@ -5,7 +5,6 @@ use crate::{
     },
     GLenum,
 };
-use std::convert::TryInto;
 
 /// Error Object for OpenGL.
 #[derive(Clone, Copy, Default, PartialEq, Eq)]
@@ -21,12 +20,12 @@ impl Error {
 
     /// Return true if error raised.
     pub fn is_error(self) -> bool {
-        self.0 != NO_ERROR.try_into().unwrap()
+        self.0 != NO_ERROR
     }
 
     /// Return true if no error.
     pub fn is_okay(self) -> bool {
-        self.0 == NO_ERROR.try_into().unwrap()
+        self.0 == NO_ERROR
     }
 
     /// Return human reable text of the error code.
