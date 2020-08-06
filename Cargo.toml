@@ -13,23 +13,23 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-nalgebra = "0.19.0"
+nalgebra = "0.19"
 
 [build-dependencies]
-gl_generator = "0.14.0"
+gl_generator = "0.14"
 
 [target.'cfg(windows)'.dev-dependencies]
-sdl2 = { version = "0.32.2", features = ["bundled", "static-link"] }
+sdl2 = { version = "0.32", features = ["bundled", "static-link"] }
 
 [target.'cfg(windows)'.dependencies]
-winapi = { version = "0.3.8", features = [ "libloaderapi" ] }
+winapi = { version = "0.3", features = [ "libloaderapi" ] }
 
 [target.'cfg(unix)'.dependencies]
 libc = "0.2"
 egls = { version = "0.1", optional = true }
 
 [target.'cfg(unix)'.dev-dependencies]
-sdl2 = { version = "0.32.2", features = [] }
+sdl2 = { version = "0.32", features = [] }
 
 [features]
 default = [ "gles3" ]
