@@ -66,7 +66,13 @@ pub fn bind_buffer(target: GLenum, buffer: GLuint) {
     unsafe { gl::BindBuffer(target, buffer) }
 }
 
-pub fn bind_frame_buffer(target: GLenum, framebuffer: GLuint) {
+/// Bind a framebuffer to a framebuffer target.
+///
+/// # Parameters
+///
+/// * `target` - Specifies the framebuffer target of the binding operation.
+/// * `framebuffer` - Specifies the name of the framebuffer object to bind.
+pub fn bind_framebuffer(target: GLenum, framebuffer: GLuint) {
     unsafe { gl::BindFramebuffer(target, framebuffer) }
 }
 
