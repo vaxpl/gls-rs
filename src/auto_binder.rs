@@ -51,7 +51,11 @@ impl<'a> Bindable for SlotBinder<'a> {
     }
 
     fn unbind(&self) {
-        self.bindable.unbind();
+        self.unbind_at(self.slot);
+    }
+
+    fn unbind_at(&self, slot: u32) {
+        self.bindable.unbind_at(slot);
     }
 }
 
