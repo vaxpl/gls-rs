@@ -7,6 +7,7 @@ use crate::{
     Finalizer,
 };
 use std::cell::Cell;
+use std::fmt::Debug;
 
 #[derive(Clone, Copy, Debug)]
 pub enum TextureFilter {
@@ -147,6 +148,7 @@ pub struct TextureLoadOptions<'b> {
     wrap_s: TextureWrap,
     wrap_t: TextureWrap,
     gen_mipmaps: bool,
+    allocate_storage: bool,
 }
 
 impl<'b> TextureLoadOptions<'b> {
@@ -190,6 +192,7 @@ impl<'b> Default for TextureLoadOptions<'b> {
             wrap_s: TextureWrap::ClampToEdge,
             wrap_t: TextureWrap::ClampToEdge,
             gen_mipmaps: false,
+            allocate_storage: false,
         }
     }
 }
@@ -287,6 +290,11 @@ impl<'a, 'b> TextureLoader<'a, 'b> {
         self
     }
 
+    pub fn with_allocate_storage(&mut self) -> &mut Self {
+        self.options.allocate_storage = true;
+        self
+    }
+
     pub fn with_finalizer<F>(&mut self, finalizer: F) -> &mut Self
     where
         F: Fn(&Texture<'a>) + 'a,
@@ -306,7 +314,20 @@ type TextureFinalizer<'a> = Finalizer<'a, Texture<'a>>;
 pub struct Texture<'a> {
     id: GLuint,
     target: TextureTarget,
+    width: usize,
+    height: usize,
     finalizer: Option<TextureFinalizer<'a>>,
+}
+
+impl<'a> Debug for Texture<'a> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Texture")
+            .field("id", &self.id)
+            .field("target", &self.target)
+            .field("width", &self.width)
+            .field("height", &self.height)
+            .finish()
+    }
 }
 
 impl<'a> Drop for Texture<'a> {
@@ -320,6 +341,9 @@ impl<'a> Drop for Texture<'a> {
 }
 
 impl<'a> Texture<'a> {
+    /// Construct a texture with loading options.
+    /// # Note
+    /// Auto bind the texture when loaded.
     pub fn load<'b>(
         options: TextureLoadOptions<'b>,
         finalizer: Option<TextureFinalizer<'a>>,
@@ -327,12 +351,16 @@ impl<'a> Texture<'a> {
         let texture = Texture {
             id: crate::new_texture(),
             target: options.target,
+            width: options.width,
+            height: options.height,
             finalizer,
         };
+        texture.bind();
         texture.update(options)?;
         Ok(texture)
     }
 
+    /// Set min filter parameter of the Texture.
     pub fn set_min_filter(&self, filter: TextureFilter) {
         crate::tex_parameteri(
             self.target as GLenum,
@@ -341,6 +369,7 @@ impl<'a> Texture<'a> {
         );
     }
 
+    /// Set mag filter parameter of the Texture.
     pub fn set_mag_filter(&self, filter: TextureFilter) {
         crate::tex_parameteri(
             self.target as GLenum,
@@ -349,6 +378,7 @@ impl<'a> Texture<'a> {
         );
     }
 
+    /// Set filter parameters of the Texture.
     pub fn set_filters(&self, min_filter: TextureFilter, mag_filter: TextureFilter) {
         crate::tex_parameteri(
             self.target as GLenum,
@@ -362,21 +392,25 @@ impl<'a> Texture<'a> {
         );
     }
 
+    /// Set wrap S parameter of the Texture.
     pub fn set_wrap_s(&self, wrap_s: TextureWrap) {
         crate::tex_parameteri(self.target as GLenum, gl::TEXTURE_WRAP_S, wrap_s as GLint);
     }
 
+    /// Set wrap T parameter of the Texture.
     pub fn set_wrap_t(&self, wrap_t: TextureWrap) {
         crate::tex_parameteri(self.target as GLenum, gl::TEXTURE_WRAP_T, wrap_t as GLint);
     }
 
+    /// Set wrapping parameters of the Texture.
     pub fn set_wraps(&self, wrap_s: TextureWrap, wrap_t: TextureWrap) {
         crate::tex_parameteri(self.target as GLenum, gl::TEXTURE_WRAP_S, wrap_s as GLint);
         crate::tex_parameteri(self.target as GLenum, gl::TEXTURE_WRAP_T, wrap_t as GLint);
     }
 
+    /// Update contents and attributes with TextureLoadOptions.
     pub fn update<'b>(&self, options: TextureLoadOptions<'b>) -> Result<(), String> {
-        crate::bind_texture(self.target as GLenum, self.id);
+        // crate::bind_texture(self.target as GLenum, self.id);
 
         // https://www.khronos.org/opengl/wiki/Common_Mistakes
 
@@ -395,6 +429,18 @@ impl<'a> Texture<'a> {
                 options.texel as GLuint,
                 Some(bytes),
             );
+        } else if options.allocate_storage {
+            crate::tex_image2d(
+                self.target as GLenum,
+                options.level as GLint,
+                options.internal_format as GLint,
+                options.width as GLsizei,
+                options.height as GLsizei,
+                0,
+                options.format as GLuint,
+                options.texel as GLuint,
+                None::<&[u8]>,
+            );
         }
 
         #[cfg(any(feature = "gles1", feature = "gles2", feature = "gles3"))]
@@ -408,22 +454,27 @@ impl<'a> Texture<'a> {
             crate::generate_mipmap(self.target as GLenum);
         }
 
-        crate::bind_texture(self.target as GLenum, 0);
+        // crate::bind_texture(self.target as GLenum, 0);
 
         Ok(())
     }
 
+    /// Update contents of the texture with EGLImage.
+    /// # Note
+    /// Must be binded before call the routine.
     #[cfg(any(feature = "gles1", feature = "gles2", feature = "gles3"))]
     pub fn update_with_egl_image(&self, egl_image: GLeglImageOES) {
-        crate::bind_texture(self.target as GLenum, self.id);
+        // crate::bind_texture(self.target as GLenum, self.id);
         crate::egl_image_target_texture_2d_oes(self.target as GLenum, egl_image);
-        crate::bind_texture(self.target as GLenum, 0);
+        // crate::bind_texture(self.target as GLenum, 0);
     }
 
+    /// Returns the Id of the Texture.
     pub fn id(&self) -> GLuint {
         self.id
     }
 
+    /// Returns the Target of the Texture.
     pub fn target(&self) -> TextureTarget {
         self.target
     }
@@ -441,5 +492,10 @@ impl<'a> Bindable for Texture<'a> {
 
     fn unbind(&self) {
         crate::bind_texture(self.target as GLenum, 0);
+    }
+
+    fn unbind_at(&self, slot: u32) {
+        self.unbind();
+        crate::active_texture(gl::TEXTURE0);
     }
 }
