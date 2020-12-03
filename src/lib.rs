@@ -27,6 +27,9 @@ pub use buffer::*;
 pub mod clear_buffers;
 pub use clear_buffers::*;
 
+pub mod framebuffer;
+pub use framebuffer::*;
+
 pub mod shader;
 pub use shader::*;
 
@@ -35,6 +38,9 @@ pub mod so;
 
 pub mod texture;
 pub use texture::*;
+
+pub mod variant;
+pub use variant::*;
 
 pub mod viewport;
 pub use viewport::*;
