@@ -76,6 +76,7 @@ pub fn bind_framebuffer(target: GLenum, framebuffer: GLuint) {
     unsafe { gl::BindFramebuffer(target, framebuffer) }
 }
 
+/// Bind a level of a texture to an image unit.
 pub fn bind_image_texture(
     unit: GLuint,
     texture: GLuint,
@@ -93,6 +94,7 @@ pub fn bind_renderbuffer(target: GLenum, renderbuffer: GLuint) {
     unsafe { gl::BindRenderbuffer(target, renderbuffer) }
 }
 
+/// Bind a named texture to a texturing target.
 pub fn bind_texture(target: GLenum, texture: GLuint) {
     unsafe { gl::BindTexture(target, texture) }
 }
