@@ -1,5 +1,6 @@
 use crate::{
-    gl, prelude::*, Error, GLenum, GLfloat, GLint, GLuint, Matrix4, Vector2, Vector3, Vector4, Variant,
+    gl, prelude::*, Error, GLenum, GLfloat, GLint, GLuint, Matrix4, Variant, Vector2, Vector3,
+    Vector4,
 };
 use std::fs::File;
 use std::io::Read;
@@ -16,7 +17,10 @@ pub struct Parameter {
 
 impl Parameter {
     /// Construct a parameter used for shader program.
-    pub fn new<T>(name: &'static str, value: T) -> Self where T: Into<Variant> {
+    pub fn new<T>(name: &'static str, value: T) -> Self
+    where
+        T: Into<Variant>,
+    {
         Self {
             name,
             value: value.into(),
@@ -35,7 +39,7 @@ impl Parameter {
                 Variant::Float4(ref v) => prog.set_uniform(loc, UniformValue::Float4(v)),
                 Variant::FloatV(ref v) => prog.set_uniform(loc, UniformValue::FloatV(v)),
                 Variant::Matrix4(ref v) => prog.set_uniform(loc, UniformValue::Matrix4(v)),
-                _ => {},
+                _ => {}
             }
         }
     }
@@ -46,7 +50,10 @@ impl Parameter {
     }
 
     /// Returns the value of the parameter.
-    pub fn value<'r, T>(&'r self) -> T where T: From<&'r Variant> {
+    pub fn value<'r, T>(&'r self) -> T
+    where
+        T: From<&'r Variant>,
+    {
         T::from(&self.value)
     }
 
@@ -56,7 +63,10 @@ impl Parameter {
     }
 
     /// Specifies the value of the parameter.
-    pub fn set_value<T>(&mut self, value: T) where T: Into<Variant> {
+    pub fn set_value<T>(&mut self, value: T)
+    where
+        T: Into<Variant>,
+    {
         self.value = value.into();
     }
 }
