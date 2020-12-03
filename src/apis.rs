@@ -88,7 +88,8 @@ pub fn bind_image_texture(
     unsafe { gl::BindImageTexture(unit, texture, level, layered, layer, access, format) }
 }
 
-pub fn bind_render_buffer(target: GLenum, renderbuffer: GLuint) {
+/// Bind a named renderbuffer object.
+pub fn bind_renderbuffer(target: GLenum, renderbuffer: GLuint) {
     unsafe { gl::BindRenderbuffer(target, renderbuffer) }
 }
 
