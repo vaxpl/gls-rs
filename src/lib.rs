@@ -1,4 +1,6 @@
 use nalgebra as na;
+#[allow(unused_imports)]
+use serde::{Serialize, Deserialize};
 
 pub mod prelude;
 
