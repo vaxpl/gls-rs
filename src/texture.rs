@@ -494,7 +494,7 @@ impl<'a> Bindable for Texture<'a> {
         crate::bind_texture(self.target as GLenum, 0);
     }
 
-    fn unbind_at(&self, slot: u32) {
+    fn unbind_at(&self, _slot: u32) {
         self.unbind();
         crate::active_texture(gl::TEXTURE0);
     }

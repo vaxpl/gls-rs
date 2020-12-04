@@ -1,7 +1,4 @@
-use crate::{
-    gl, prelude::*, Error, GLboolean, GLenum, GLfloat, GLint, GLuint, Matrix4, Vector2, Vector3,
-    Vector4,
-};
+use crate::{GLboolean, GLfloat, GLint, GLuint, Matrix4, Vector2, Vector3, Vector4};
 
 /// Variant container.
 #[derive(Debug, Clone)]

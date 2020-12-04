@@ -1,12 +1,6 @@
-#[cfg(any(feature = "gles1", feature = "gles2", feature = "gles3"))]
-use crate::GLeglImageOES;
-use crate::{
-    gl,
-    gl::{GLenum, GLint, GLsizei, GLuint},
-    prelude::*,
-    Finalizer, Texture, TextureFormat, TextureLoader,
-};
-use std::cell::Cell;
+use crate::gl::{GLenum, GLuint};
+use crate::prelude::*;
+use crate::{gl, Texture, TextureFormat, TextureLoader};
 
 /// Framebuffer wrapper.
 #[derive(Debug)]
@@ -79,6 +73,12 @@ impl Framebuffer {
             );
             self.unbind();
         }
+    }
+}
+
+impl Default for Framebuffer {
+    fn default() -> Self {
+        Self::with_screen()
     }
 }
 
