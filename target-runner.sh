@@ -1,12 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ -z $1 ]; then
     echo "Usage: $0 <binary-file-on-local>"
     exit 1
 fi
 
-USER=root
-PEER=192.168.1.123
+USER=${TARGET_SSH_USER:=root}
+PEER=${TARGET_SSH_HOST:=192.168.1.123}
 
 ENV=LD_LIBRARY_PATH=/usr/local/lib:/usr/lib:/root/lib:/root/lib/ffmpeg
 LOCAL_FILE=$1
