@@ -7,6 +7,7 @@
 #![allow(clippy::too_many_arguments)]
 #![allow(clippy::unreadable_literal)]
 #![allow(clippy::unused_unit)]
+#![allow(clippy::upper_case_acronyms)]
 
 include!(concat!(env!("OUT_DIR"), "/gl_bindings.rs"));
 

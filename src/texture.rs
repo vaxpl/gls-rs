@@ -1,3 +1,4 @@
+#![allow(clippy::upper_case_acronyms)]
 #[cfg(any(feature = "gles1", feature = "gles2", feature = "gles3"))]
 use crate::GLeglImageOES;
 use crate::{
@@ -153,23 +154,25 @@ pub struct TextureLoadOptions<'b> {
 
 impl<'b> TextureLoadOptions<'b> {
     pub fn from_bytes_rgb(bytes: &'b [u8], width: usize, height: usize) -> Self {
-        let mut options: TextureLoadOptions = Default::default();
-        options.bytes = Some(bytes);
-        options.internal_format = TextureFormat::Rgb8;
-        options.width = width;
-        options.height = height;
-        options.format = TextureFormat::Rgb;
-        options
+        Self {
+            bytes: Some(bytes),
+            internal_format: TextureFormat::Rgb8,
+            width,
+            height,
+            format: TextureFormat::Rgb,
+            ..Default::default()
+        }
     }
 
     pub fn from_bytes_rgba(bytes: &'b [u8], width: usize, height: usize) -> Self {
-        let mut options: TextureLoadOptions = Default::default();
-        options.bytes = Some(bytes);
-        options.internal_format = TextureFormat::Rgba;
-        options.width = width;
-        options.height = height;
-        options.format = TextureFormat::Rgba;
-        options
+        Self {
+            bytes: Some(bytes),
+            internal_format: TextureFormat::Rgba,
+            width,
+            height,
+            format: TextureFormat::Rgba,
+            ..Default::default()
+        }
     }
 }
 
@@ -409,7 +412,7 @@ impl<'a> Texture<'a> {
     }
 
     /// Update contents and attributes with TextureLoadOptions.
-    pub fn update<'b>(&self, options: TextureLoadOptions<'b>) -> Result<(), String> {
+    pub fn update(&self, options: TextureLoadOptions<'_>) -> Result<(), String> {
         // crate::bind_texture(self.target as GLenum, self.id);
 
         // https://www.khronos.org/opengl/wiki/Common_Mistakes
