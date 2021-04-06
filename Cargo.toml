@@ -26,11 +26,16 @@ sdl2 = { version = "0.32", features = ["bundled", "static-link"] }
 winapi = { version = "0.3", features = [ "libloaderapi" ] }
 
 [target.'cfg(unix)'.dependencies]
-libc = "0.2"
 egls = { version = "0.1", optional = true }
+libc = "0.2"
 
-[target.'cfg(unix)'.dev-dependencies]
-sdl2 = { version = "0.32", features = [] }
+[target.aarch64-unknown-linux-gnu.dev-dependencies]
+egls = { version = "0.1" }
+rand = "0"
+
+[target.x86_64-unknown-linux-gnu.dev-dependencies]
+rand = "0"
+sdl2 = { version = "0", features = [] }
 
 [features]
 default = [ "gles3" ]

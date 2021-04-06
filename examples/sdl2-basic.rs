@@ -1,6 +1,9 @@
-use gls;
+#[cfg(target_arch = "x86_64")]
+use gls::{self, gl};
+#[cfg(target_arch = "x86_64")]
 use sdl2;
 
+#[cfg(target_arch = "x86_64")]
 fn main() {
     let sdl = sdl2::init().unwrap();
     let video_subsystem = sdl.video().unwrap();
@@ -25,7 +28,10 @@ fn main() {
                 _ => {}
             }
         }
-        gls::clear(gl::gl::COLOR_BUFFER_BIT);
+        gls::clear(gl::COLOR_BUFFER_BIT);
         window.gl_swap_window();
     }
 }
+
+#[cfg(not(target_arch = "x86_64"))]
+fn main() {}

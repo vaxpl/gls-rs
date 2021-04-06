@@ -1,31 +1,22 @@
-#[cfg(target_arch = "x86_64")]
+#[cfg(target_arch = "aarch64")]
+use egls::EnvironmentBuilder;
+#[cfg(target_arch = "aarch64")]
 use gls::{
     gl, prelude::*, uniform, AutoBinder, Buffer, ClearBuffers, GLint, GLsizeiptr, GLuint, Matrix4,
     Program, Shader, Vector4, VertexArray, VertexAttrib, Viewport,
 };
-#[cfg(target_arch = "x86_64")]
-use sdl2;
 
-#[cfg(target_arch = "x86_64")]
+#[cfg(target_arch = "aarch64")]
 fn main() {
-    let sdl = sdl2::init().unwrap();
-    let video_subsystem = sdl.video().unwrap();
-    let gl_attr = video_subsystem.gl_attr();
-    gl_attr.set_context_profile(sdl2::video::GLProfile::Core);
-    gl_attr.set_context_version(4, 1);
-    let window = video_subsystem
-        .window("Gls - Triangle", 800, 600)
-        .opengl()
-        .resizable()
-        .build()
-        .unwrap();
-    // create OpenGL context
-    let _gl_context = window.gl_create_context().unwrap();
-    // load OpenGL routines
-    gls::load_with(|s| video_subsystem.gl_get_proc_address(s) as *const std::ffi::c_void);
+    let (w, h) = (1920, 1080);
+    let env = EnvironmentBuilder::defaults()
+        .with_samples(4)
+        .with_window_size(w as usize, h as usize)
+        .build();
 
-    // set cviewport
-    let (w, h) = window.size();
+    gls::load_with(|s| egls::get_proc_address(s));
+
+    // set viewport
     let viewport = Viewport::with_size(w as i32, h as i32);
     // set screen clear color
     let clear_buffers = ClearBuffers::new().with_color(Some(Vector4::new(0.3, 0.3, 0.5, 1.0)));
@@ -84,15 +75,7 @@ fn main() {
     vbo.unbind();
     vao.unbind();
 
-    let mut event_pump = sdl.event_pump().unwrap();
-    'main: loop {
-        for event in event_pump.poll_iter() {
-            match event {
-                sdl2::event::Event::Quit { .. } => break 'main,
-                _ => {}
-            }
-        }
-
+    for _a in 0..60 {
         let _a = AutoBinder::new(vec![&viewport, &clear_buffers, &prog, &vao]);
 
         gls::draw_arrays(
@@ -101,9 +84,9 @@ fn main() {
             3,             // number of indices to be rendered
         );
 
-        window.gl_swap_window();
+        env.swap_buffers();
     }
 }
 
-#[cfg(not(target_arch = "x86_64"))]
+#[cfg(not(target_arch = "aarch64"))]
 fn main() {}
